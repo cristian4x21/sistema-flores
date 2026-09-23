@@ -45,7 +45,7 @@ export const TicketPrintModal: React.FC<TicketPrintModalProps> = ({
           {/* Logo y Encabezado del Ticket */}
           <div className="text-center pb-4 border-b-2 border-dashed border-slate-300">
             <span className="text-3xl block mb-1">🌸</span>
-            <h2 className="text-lg font-black tracking-tight uppercase">Florería Flores & Ramos</h2>
+            <h2 className="text-lg font-black tracking-tight uppercase">Sistema v1.0</h2>
             <p className="text-xs text-slate-500 font-medium">Puno • Juliaca</p>
             <div className="mt-2 inline-block bg-slate-100 px-3 py-1 rounded-full font-mono text-xs font-bold">
               {pedido.id}
@@ -152,7 +152,7 @@ export const TicketPrintModal: React.FC<TicketPrintModalProps> = ({
           {/* Pie del ticket */}
           <div className="pt-4 text-center text-[11px] text-slate-400">
             <p>¡Gracias por su preferencia!</p>
-            <p>Florería Flores & Ramos • Detalles que enamoran</p>
+            <p>Sistema v1.0 • Control de Pedidos</p>
           </div>
 
         </div>
