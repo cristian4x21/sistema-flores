@@ -59,11 +59,23 @@ export async function createPedido(input: PedidoInput): Promise<Pedido> {
 
   if (isSupabaseConfigured && supabase) {
     try {
-      const { data, error } = await supabase
+      const payload: Record<string, any> = { ...newPedido };
+      let { data, error } = await supabase
         .from('pedidos')
-        .insert([newPedido])
+        .insert([payload])
         .select()
         .single();
+
+      if (error && error.message?.includes('estado')) {
+        delete payload.estado;
+        const retry = await supabase
+          .from('pedidos')
+          .insert([payload])
+          .select()
+          .single();
+        data = retry.data;
+        error = retry.error;
+      }
 
       if (error) {
         console.error('Supabase insert error, fallback to memory:', error);
@@ -83,12 +95,25 @@ export async function createPedido(input: PedidoInput): Promise<Pedido> {
 export async function updatePedido(id: string, updates: Partial<Pedido>): Promise<Pedido | null> {
   if (isSupabaseConfigured && supabase) {
     try {
-      const { data, error } = await supabase
+      const payload: Record<string, any> = { ...updates };
+      let { data, error } = await supabase
         .from('pedidos')
-        .update(updates)
+        .update(payload)
         .eq('id', id)
         .select()
         .single();
+
+      if (error && error.message?.includes('estado')) {
+        delete payload.estado;
+        const retry = await supabase
+          .from('pedidos')
+          .update(payload)
+          .eq('id', id)
+          .select()
+          .single();
+        data = retry.data;
+        error = retry.error;
+      }
 
       if (error) {
         console.error('Supabase update error, fallback to memory:', error);

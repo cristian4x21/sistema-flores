@@ -33,8 +33,9 @@ export type PedidoInput = Omit<Pedido, 'id' | 'created_at'>;
  */
 export function getEstadoPedido(p: Pedido): EstadoPedido {
   if (p.entregado) return 'entregado';
-  if (p.estado) return p.estado;
   if (p.hecho) return 'listo';
+  if (p.estado === 'confeccion' || p.notas?.includes('[EN_CONFECCION]')) return 'confeccion';
+  if (p.estado) return p.estado;
   return 'pendiente';
 }
 
