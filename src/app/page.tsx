@@ -10,8 +10,9 @@ import { PedidosTable } from '@/components/PedidosTable';
 import { PedidosCards } from '@/components/PedidosCards';
 import { PedidoModal } from '@/components/PedidoModal';
 import { TicketPrintModal } from '@/components/TicketPrintModal';
+import { TopRamosModal } from '@/components/TopRamosModal';
 import { exportPedidosToCSV } from '@/lib/exportExcel';
-import { Database, AlertTriangle, CheckCircle, Info } from 'lucide-react';
+import { Database, AlertTriangle, CheckCircle, Info, Trophy } from 'lucide-react';
 
 export default function HomePage() {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
@@ -22,6 +23,7 @@ export default function HomePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingPedido, setEditingPedido] = useState<Pedido | null>(null);
   const [printingPedido, setPrintingPedido] = useState<Pedido | null>(null);
+  const [isTopRamosOpen, setIsTopRamosOpen] = useState(false);
 
   // Filtros
   const [filters, setFilters] = useState<FilterState>({
@@ -66,6 +68,20 @@ export default function HomePage() {
       todos: pedidos.length,
     };
   }, [pedidos, todayStr, tomorrowStr]);
+
+  // Ramo estrella más pedido
+  const ramoMasPedido = useMemo(() => {
+    if (pedidos.length === 0) return null;
+    const mapa: { [key: string]: { count: number; name: string } } = {};
+    pedidos.forEach((p) => {
+      const key = (p.producto || '').trim().toLowerCase();
+      if (!key) return;
+      if (!mapa[key]) mapa[key] = { count: 0, name: p.producto };
+      mapa[key].count++;
+    });
+    const lista = Object.values(mapa).sort((a, b) => b.count - a.count);
+    return lista.length > 0 ? lista[0] : null;
+  }, [pedidos]);
 
   // Filtrado de pedidos según los controles seleccionados
   const filteredPedidos = useMemo(() => {
@@ -212,6 +228,7 @@ export default function HomePage() {
         }}
         onExport={handleExport}
         onRefresh={fetchPedidos}
+        onOpenTopRamos={() => setIsTopRamosOpen(true)}
         isRefreshing={refreshing}
         totalPedidos={pedidos.length}
       />
@@ -219,23 +236,34 @@ export default function HomePage() {
       {/* Contenido Principal */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
         
-        {/* Banner de Información Rápida */}
-        <div className="mb-4 bg-gradient-to-r from-rose-500/10 via-pink-500/5 to-slate-50 border border-rose-200/70 rounded-2xl p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        {/* Banner de Información Rápida con Ramo Estrella */}
+        <div className="mb-4 bg-gradient-to-r from-rose-500/10 via-amber-500/10 to-slate-50 border border-rose-200/70 rounded-2xl p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <span className="text-xl">💐</span>
             <div>
               <p className="text-xs sm:text-sm font-bold text-slate-800">
-                Panel Operativo de Florería: Control de Ramos & Detalles
+                Panel Operativo: Control de Pedidos & Ramos
               </p>
               <p className="text-[11px] sm:text-xs text-slate-500">
-                Punto de control diario para floristas y repartidores. Haz clic en <span className="font-semibold text-emerald-700">Hecho</span> o <span className="font-semibold text-emerald-700">Entregado</span> para cambiar de estado al instante.
+                Haz clic directo en <span className="font-semibold text-emerald-700">Hecho</span> o <span className="font-semibold text-emerald-700">Entregado</span> para actualizar sin abrir ventanas.
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2 self-end sm:self-center">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 shadow-2xs">
+          <div className="flex flex-wrap items-center gap-2 self-start sm:self-center">
+            {ramoMasPedido && (
+              <button
+                onClick={() => setIsTopRamosOpen(true)}
+                title="Haz clic para ver el ranking completo"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 transition-all shadow-2xs active:scale-95 cursor-pointer"
+              >
+                <span>🏆 Ramo que más sale:</span>
+                <span className="text-rose-700 underline capitalize">{ramoMasPedido.name}</span>
+                <span className="text-amber-800 font-black">({ramoMasPedido.count})</span>
+              </button>
+            )}
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 shadow-2xs">
               <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-              Sistema Operativo
+              En Vivo
             </span>
           </div>
         </div>
@@ -299,6 +327,13 @@ export default function HomePage() {
       <TicketPrintModal
         pedido={printingPedido}
         onClose={() => setPrintingPedido(null)}
+      />
+
+      {/* Modal de Ranking de Ramos Más Vendidos */}
+      <TopRamosModal
+        isOpen={isTopRamosOpen}
+        onClose={() => setIsTopRamosOpen(false)}
+        pedidos={pedidos}
       />
 
       {/* Pie de Página */}

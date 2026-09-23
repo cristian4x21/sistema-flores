@@ -1,12 +1,13 @@
 'use client';
 
 import React from 'react';
-import { Plus, Download, RefreshCw, Sparkles, Database } from 'lucide-react';
+import { Plus, Download, RefreshCw, Sparkles, Database, Trophy } from 'lucide-react';
 
 interface NavbarProps {
   onNewOrder: () => void;
   onExport: () => void;
   onRefresh: () => void;
+  onOpenTopRamos?: () => void;
   isRefreshing?: boolean;
   totalPedidos: number;
 }
@@ -15,6 +16,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onNewOrder,
   onExport,
   onRefresh,
+  onOpenTopRamos,
   isRefreshing = false,
   totalPedidos,
 }) => {
@@ -57,6 +59,18 @@ export const Navbar: React.FC<NavbarProps> = ({
               <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-rose-600' : ''}`} />
               <span className="hidden md:inline">Actualizar</span>
             </button>
+
+            {/* Botón Ranking Ramos Más Vendidos */}
+            {onOpenTopRamos && (
+              <button
+                onClick={onOpenTopRamos}
+                title="Ver qué ramo sale más (Ranking de Ventas)"
+                className="p-2 sm:px-3 sm:py-2 text-amber-800 hover:text-amber-950 bg-amber-50 hover:bg-amber-100 border border-amber-200/80 rounded-xl transition-all flex items-center gap-1.5 text-xs sm:text-sm font-bold active:scale-95 shadow-2xs"
+              >
+                <Trophy className="w-4 h-4 text-amber-600" />
+                <span className="hidden sm:inline">Ramos Más Pedidos</span>
+              </button>
+            )}
 
             {/* Botón Exportar */}
             <button
