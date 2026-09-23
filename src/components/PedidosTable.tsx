@@ -12,6 +12,7 @@ interface PedidosTableProps {
   onEdit: (pedido: Pedido) => void;
   onDelete: (pedido: Pedido) => void;
   onPrint: (pedido: Pedido) => void;
+  onNewOrder?: () => void;
 }
 
 export const PedidosTable: React.FC<PedidosTableProps> = ({
@@ -21,19 +22,29 @@ export const PedidosTable: React.FC<PedidosTableProps> = ({
   onEdit,
   onDelete,
   onPrint,
+  onNewOrder,
 }) => {
   const todayStr = getTodayDateString(0);
 
   if (pedidos.length === 0) {
     return (
-      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/90 dark:border-slate-800 p-12 text-center shadow-xs">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/90 dark:border-slate-800 p-10 sm:p-14 text-center shadow-xs">
         <div className="w-16 h-16 rounded-full bg-rose-50 dark:bg-rose-950/40 text-rose-500 mx-auto flex items-center justify-center text-3xl mb-3">
           🌸
         </div>
-        <h3 className="text-base font-bold text-slate-800 dark:text-white">No se encontraron pedidos</h3>
-        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-sm mx-auto">
-          No hay pedidos con los filtros seleccionados. Prueba cambiando la fecha o limpiando el buscador.
+        <h3 className="text-base sm:text-lg font-bold text-slate-800 dark:text-white">Aún no hay pedidos en esta vista</h3>
+        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1.5 max-w-md mx-auto">
+          El sistema está 100% limpio y listo para empezar a registrar los pedidos reales de tu negocio.
         </p>
+        {onNewOrder && (
+          <button
+            type="button"
+            onClick={onNewOrder}
+            className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white rounded-xl shadow-md shadow-rose-200 dark:shadow-none text-xs sm:text-sm font-bold transition-all active:scale-95 cursor-pointer"
+          >
+            <span>+ Registrar Primer Pedido</span>
+          </button>
+        )}
       </div>
     );
   }

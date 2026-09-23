@@ -477,6 +477,10 @@ export default function HomePage() {
             }}
             onDelete={(p) => setDeletingPedido(p)}
             onPrint={(p) => setPrintingPedido(p)}
+            onNewOrder={() => {
+              setEditingPedido(null);
+              setIsModalOpen(true);
+            }}
           />
         ) : (
           <PedidosCards
@@ -489,6 +493,10 @@ export default function HomePage() {
             }}
             onDelete={(p) => setDeletingPedido(p)}
             onPrint={(p) => setPrintingPedido(p)}
+            onNewOrder={() => {
+              setEditingPedido(null);
+              setIsModalOpen(true);
+            }}
           />
         )}
 
