@@ -1,13 +1,14 @@
 'use client';
 
 import React from 'react';
-import { Plus, Download, RefreshCw, Trophy, Moon, Sun } from 'lucide-react';
+import { Plus, Download, RefreshCw, Trophy, Moon, Sun, ShieldCheck } from 'lucide-react';
 
 interface NavbarProps {
   onNewOrder: () => void;
   onExport: () => void;
   onRefresh: () => void;
   onOpenTopRamos?: () => void;
+  onOpenBackup?: () => void;
   isRefreshing?: boolean;
   totalPedidos: number;
   darkMode?: boolean;
@@ -19,6 +20,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onExport,
   onRefresh,
   onOpenTopRamos,
+  onOpenBackup,
   isRefreshing = false,
   totalPedidos,
   darkMode = false,
@@ -90,11 +92,24 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             )}
 
+            {/* Botón Copias de Seguridad & Respaldos */}
+            {onOpenBackup && (
+              <button
+                type="button"
+                onClick={onOpenBackup}
+                title="Copias de Seguridad & Respaldos (Excel / JSON)"
+                className="p-2 sm:px-3 sm:py-2 text-teal-800 dark:text-teal-300 hover:text-teal-950 dark:hover:text-white bg-teal-50 dark:bg-teal-950/40 hover:bg-teal-100 dark:hover:bg-teal-900/50 border border-teal-200 dark:border-teal-800/80 rounded-xl transition-all flex items-center gap-1.5 text-xs sm:text-sm font-bold active:scale-95 shadow-2xs"
+              >
+                <ShieldCheck className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+                <span className="hidden sm:inline">Respaldos</span>
+              </button>
+            )}
+
             {/* Botón Exportar (Outline) */}
             <button
               type="button"
               onClick={onExport}
-              title="Descargar pedidos en formato Excel / CSV"
+              title="Descargar pedidos filtrados en formato Excel"
               className="p-2 sm:px-3 sm:py-2 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-slate-300 rounded-xl shadow-2xs transition-all flex items-center gap-1.5 text-xs sm:text-sm font-semibold"
             >
               <Download className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />

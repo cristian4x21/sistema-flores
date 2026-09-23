@@ -13,6 +13,7 @@ import { TicketPrintModal } from '@/components/TicketPrintModal';
 import { TopRamosModal } from '@/components/TopRamosModal';
 import { DeleteConfirmModal } from '@/components/DeleteConfirmModal';
 import { PedidoDetailModal } from '@/components/PedidoDetailModal';
+import { BackupModal } from '@/components/BackupModal';
 import { exportPedidosToCSV } from '@/lib/exportExcel';
 
 const STORAGE_FILTER_KEY = 'floreria_filter_state_v1';
@@ -32,6 +33,7 @@ export default function HomePage() {
   const [deletingPedido, setDeletingPedido] = useState<Pedido | null>(null);
   const [detailPedido, setDetailPedido] = useState<Pedido | null>(null);
   const [isTopRamosOpen, setIsTopRamosOpen] = useState(false);
+  const [isBackupOpen, setIsBackupOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Filtros con persistencia
@@ -382,6 +384,7 @@ export default function HomePage() {
         onExport={handleExport}
         onRefresh={fetchPedidos}
         onOpenTopRamos={() => setIsTopRamosOpen(true)}
+        onOpenBackup={() => setIsBackupOpen(true)}
         isRefreshing={refreshing}
         totalPedidos={pedidos.length}
         darkMode={darkMode}
@@ -572,6 +575,14 @@ export default function HomePage() {
         isOpen={isTopRamosOpen}
         onClose={() => setIsTopRamosOpen(false)}
         pedidos={pedidos}
+      />
+
+      {/* Modal de Copias de Seguridad & Respaldos */}
+      <BackupModal
+        isOpen={isBackupOpen}
+        onClose={() => setIsBackupOpen(false)}
+        pedidos={pedidos}
+        onRefresh={fetchPedidos}
       />
 
       {/* Pie de Página */}

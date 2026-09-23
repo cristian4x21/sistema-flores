@@ -53,3 +53,17 @@ export function exportPedidosToCSV(pedidos: Pedido[], filename = 'pedidos_florer
   link.click();
   document.body.removeChild(link);
 }
+
+export function exportBackupJSON(pedidos: Pedido[], filename = 'respaldo_floreria.json') {
+  const jsonContent = JSON.stringify(pedidos, null, 2);
+  const blob = new Blob([jsonContent], { type: 'application/json;charset=utf-8;' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  link.setAttribute('href', url);
+  link.setAttribute('download', filename);
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
