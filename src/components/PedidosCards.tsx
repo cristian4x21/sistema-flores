@@ -1,70 +1,115 @@
 'use client';
 
 import React from 'react';
-import { Pedido } from '@/types/pedido';
-import { MessageCircle, Phone, Clock, MapPin, Truck, Printer, Edit2, Trash2, Scissors } from 'lucide-react';
+import { Pedido, getEstadoPedido, EstadoPedido, isPedidoUrgente } from '@/types/pedido';
+import { getTodayDateString } from '@/lib/mockData';
+import { MessageCircle, Clock, MapPin, Printer, Edit2, Trash2, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 interface PedidosCardsProps {
   pedidos: Pedido[];
-  onToggleHecho: (id: string, current: boolean) => void;
-  onToggleEntregado: (id: string, current: boolean) => void;
+  onStatusChange: (id: string, nuevoEstado: EstadoPedido) => void;
+  onRowClick: (pedido: Pedido) => void;
   onEdit: (pedido: Pedido) => void;
-  onDelete: (id: string) => void;
+  onDelete: (pedido: Pedido) => void;
   onPrint: (pedido: Pedido) => void;
 }
 
 export const PedidosCards: React.FC<PedidosCardsProps> = ({
   pedidos,
-  onToggleHecho,
-  onToggleEntregado,
+  onStatusChange,
+  onRowClick,
   onEdit,
   onDelete,
   onPrint,
 }) => {
+  const todayStr = getTodayDateString(0);
+
   if (pedidos.length === 0) {
     return (
-      <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center">
-        <p className="text-sm text-slate-500">No hay pedidos que coincidan con la búsqueda.</p>
+      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/90 dark:border-slate-800 p-8 text-center">
+        <p className="text-sm text-slate-500 dark:text-slate-400">
+          No hay pedidos que coincidan con la búsqueda o filtro activo.
+        </p>
       </div>
     );
   }
 
+  const cycleStatus = (e: React.MouseEvent, id: string, current: EstadoPedido) => {
+    e.stopPropagation();
+    const nextMap: Record<EstadoPedido, EstadoPedido> = {
+      pendiente: 'confeccion',
+      confeccion: 'listo',
+      listo: 'entregado',
+      entregado: 'pendiente',
+    };
+    onStatusChange(id, nextMap[current]);
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {pedidos.map((pedido) => {
+        const estado = getEstadoPedido(pedido);
         const hasSaldo = Number(pedido.saldo) > 0;
         const isPuno = pedido.ciudad?.toLowerCase().includes('puno');
         const isDelivery = pedido.tipo_entrega === 'Delivery';
+        const esUrgente = isPedidoUrgente(pedido, todayStr);
 
         const whatsappText = encodeURIComponent(
           `¡Hola! 🌸 Te saludamos de la Florería respecto a tu pedido de *${pedido.producto}*. Queríamos coordinar la entrega programada para hoy a las ${pedido.hora}.`
         );
 
+        const statusConfig = {
+          pendiente: {
+            label: '🔴 Pendiente',
+            desc: 'Por iniciar',
+            style: 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-900',
+          },
+          confeccion: {
+            label: '🟡 En Confección',
+            desc: 'En taller',
+            style: 'bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-900',
+          },
+          listo: {
+            label: '🟢 Listo p/ Entrega',
+            desc: 'Esperando despacho',
+            style: 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-900',
+          },
+          entregado: {
+            label: '✅ Entregado',
+            desc: 'Finalizado',
+            style: 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700',
+          },
+        }[estado];
+
         return (
           <div
             key={pedido.id}
-            className={`bg-white rounded-2xl border transition-all p-4 shadow-xs flex flex-col justify-between ${
-              !pedido.hecho ? 'border-rose-300 ring-1 ring-rose-200' : 'border-slate-200'
+            onClick={() => onRowClick(pedido)}
+            className={`rounded-3xl border transition-all p-4.5 shadow-sm hover:shadow-md cursor-pointer flex flex-col justify-between ${
+              esUrgente
+                ? 'bg-rose-50/90 dark:bg-rose-950/20 border-rose-300 dark:border-rose-800 ring-2 ring-rose-400/40'
+                : 'bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-800 hover:border-rose-200'
             }`}
           >
             <div>
-              {/* Encabezado de la Tarjeta */}
-              <div className="flex items-start justify-between gap-2 mb-2.5">
-                <div>
-                  <span className="text-[11px] font-mono text-slate-400 font-semibold uppercase">
+              {/* Encabezado */}
+              <div className="flex items-start justify-between gap-2 mb-2">
+                <div className="min-w-0">
+                  <span className="text-[10px] font-mono text-slate-400 font-bold uppercase">
                     {pedido.id}
                   </span>
-                  <h3 className="font-bold text-slate-900 text-base capitalize leading-snug">
+                  <h3 className="font-black text-slate-900 dark:text-white text-base capitalize leading-snug truncate">
                     {pedido.producto}
                   </h3>
                   {pedido.cliente && (
-                    <p className="text-xs text-slate-600 font-medium">👤 {pedido.cliente}</p>
+                    <p className="text-xs text-slate-600 dark:text-slate-300 font-medium truncate mt-0.5">
+                      👤 {pedido.cliente}
+                    </p>
                   )}
                 </div>
 
-                {/* Badge Ciudad */}
                 <span
-                  className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                  className={`px-2.5 py-0.5 rounded-full text-xs font-bold shrink-0 ${
                     isPuno
                       ? 'bg-emerald-700 text-white'
                       : 'bg-purple-700 text-white'
@@ -74,126 +119,112 @@ export const PedidosCards: React.FC<PedidosCardsProps> = ({
                 </span>
               </div>
 
-              {/* Dedicatoria si existe */}
+              {/* Dedicatoria */}
               {pedido.dedicatoria && (
-                <div className="text-xs bg-rose-50 border border-rose-100 rounded-xl p-2.5 text-rose-800 italic mb-3">
+                <div className="text-xs bg-rose-50/70 dark:bg-rose-950/30 border border-rose-100 dark:border-rose-900/40 rounded-xl p-2.5 text-rose-800 dark:text-rose-300 italic mb-3 line-clamp-2">
                   💌 &ldquo;{pedido.dedicatoria}&rdquo;
                 </div>
               )}
 
-              {/* Detalles de entrega y hora */}
-              <div className="grid grid-cols-2 gap-2 text-xs text-slate-600 mb-3 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                <div className="flex items-center gap-1.5 font-medium">
+              {/* Horario y Modalidad */}
+              <div className="grid grid-cols-2 gap-2 text-xs text-slate-600 dark:text-slate-300 mb-3 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-2xl border border-slate-100 dark:border-slate-700/60">
+                <div className="flex items-center gap-1.5 font-bold text-slate-900 dark:text-white">
                   <Clock className="w-3.5 h-3.5 text-slate-400" />
-                  <span>{pedido.fecha} - {pedido.hora}</span>
+                  <span>{pedido.hora}</span>
+                  <span className="text-[10px] font-normal text-slate-400">({pedido.fecha.slice(5)})</span>
                 </div>
-                <div className="flex items-center gap-1.5">
+                <div className="text-right">
                   <span
-                    className={`px-2 py-0.5 rounded text-[11px] font-semibold ${
-                      isDelivery ? 'bg-sky-100 text-sky-800' : 'bg-emerald-100 text-emerald-800'
+                    className={`inline-block px-2 py-0.5 rounded text-[11px] font-bold ${
+                      isDelivery
+                        ? 'bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300'
+                        : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
                     }`}
                   >
-                    {isDelivery ? '🛵 Delivery' : '🛍️ Recojo'}
+                    {isDelivery ? `🛵 Deliv S/${Number(pedido.costo_delivery).toFixed(0)}` : '🛍️ Recojo'}
                   </span>
                 </div>
                 {isDelivery && pedido.direccion && (
-                  <div className="col-span-2 text-[11px] text-slate-600 flex items-start gap-1 pt-1 border-t border-slate-200">
+                  <div className="col-span-2 text-[11px] text-slate-500 dark:text-slate-400 flex items-start gap-1 pt-1 border-t border-slate-200 dark:border-slate-700 truncate">
                     <MapPin className="w-3 h-3 text-rose-500 shrink-0 mt-0.5" />
-                    <span>{pedido.direccion}</span>
-                  </div>
-                )}
-                {pedido.notas && (
-                  <div className="col-span-2 text-[11px] text-amber-700 bg-amber-50 px-2 py-1 rounded">
-                    ⚠️ {pedido.notas}
+                    <span className="truncate">{pedido.direccion}</span>
                   </div>
                 )}
               </div>
 
-              {/* Desglose de pagos */}
-              <div className="flex items-center justify-between text-xs py-2 px-3 bg-slate-100/70 rounded-xl font-mono mb-3">
+              {/* Saldo y Pagos */}
+              <div className="flex items-center justify-between p-2.5 bg-slate-100/70 dark:bg-slate-800/80 rounded-2xl mb-3 text-xs">
                 <div>
-                  <span className="text-slate-400 block text-[10px]">YAPE</span>
-                  <span className="font-semibold text-purple-700">S/ {Number(pedido.pago_yape).toFixed(2)}</span>
-                </div>
-                <div>
-                  <span className="text-slate-400 block text-[10px]">EFECTIVO</span>
-                  <span className="font-semibold text-emerald-700">S/ {Number(pedido.pago_efectivo).toFixed(2)}</span>
-                </div>
-                <div>
-                  <span className="text-slate-400 block text-[10px]">SALDO</span>
-                  <span
-                    className={`font-bold ${
-                      hasSaldo ? 'text-rose-600 animate-pulse' : 'text-slate-500'
-                    }`}
-                  >
-                    S/ {Number(pedido.saldo).toFixed(2)}
+                  <span className="text-[10px] text-slate-400 block font-bold">PAGADO</span>
+                  <span className="font-bold text-slate-700 dark:text-slate-200 font-mono">
+                    S/ {(Number(pedido.pago_yape) + Number(pedido.pago_efectivo)).toFixed(2)}
                   </span>
+                </div>
+
+                <div className="text-right">
+                  <span className="text-[10px] text-slate-400 block font-bold">SALDO PENDIENTE</span>
+                  {hasSaldo ? (
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-amber-500 text-white font-black text-xs font-mono">
+                      <AlertCircle className="w-3 h-3" />
+                      S/ {Number(pedido.saldo).toFixed(2)}
+                    </span>
+                  ) : (
+                    <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-0.5 justify-end">
+                      <CheckCircle2 className="w-3 h-3" /> Cancelado
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
 
-            {/* Controles de Estado y Acciones */}
-            <div className="pt-2 border-t border-slate-100 space-y-2.5">
+            {/* Pie de la Tarjeta con Semáforo y Acciones */}
+            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-2">
               
-              {/* Switches Hecho y Entregado */}
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  onClick={() => onToggleHecho(pedido.id, pedido.hecho)}
-                  className={`py-1.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
-                    pedido.hecho
-                      ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                      : 'bg-rose-600 hover:bg-rose-700 text-white animate-pulse'
-                  }`}
-                >
-                  <Scissors className="w-3.5 h-3.5" />
-                  <span>Hecho: {pedido.hecho ? 'Sí' : 'No'}</span>
-                </button>
+              {/* Botón de Semáforo Único */}
+              <button
+                type="button"
+                onClick={(e) => cycleStatus(e, pedido.id, estado)}
+                className={`w-full py-2 px-3 rounded-2xl text-xs font-bold border transition-all flex items-center justify-between shadow-2xs active:scale-95 ${statusConfig.style}`}
+              >
+                <span>{statusConfig.label}</span>
+                <span className="text-[11px] opacity-75 font-semibold">Tocar para cambiar ▾</span>
+              </button>
 
-                <button
-                  onClick={() => onToggleEntregado(pedido.id, pedido.entregado)}
-                  className={`py-1.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
-                    pedido.entregado
-                      ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                      : 'bg-rose-600 hover:bg-rose-700 text-white'
-                  }`}
-                >
-                  <Truck className="w-3.5 h-3.5" />
-                  <span>Entregado: {pedido.entregado ? 'Sí' : 'No'}</span>
-                </button>
-              </div>
-
-              {/* Botón WhatsApp directo y botones de acción */}
-              <div className="flex items-center justify-between gap-2">
+              {/* Botón WhatsApp y Acciones Rápidas */}
+              <div className="flex items-center justify-between gap-2" onClick={(e) => e.stopPropagation()}>
                 <a
                   href={`https://wa.me/51${pedido.celular}?text=${whatsappText}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 py-1.5 px-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold flex items-center justify-center gap-1.5 border border-emerald-200 transition-colors"
+                  className="flex-1 py-1.5 px-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 text-emerald-800 dark:text-emerald-300 text-xs font-bold flex items-center justify-center gap-1.5 border border-emerald-200 dark:border-emerald-800 transition-colors"
                 >
                   <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
                   <span>WhatsApp ({pedido.celular})</span>
                 </a>
 
                 <button
+                  type="button"
                   onClick={() => onPrint(pedido)}
                   title="Imprimir comanda"
-                  className="p-1.5 text-slate-600 hover:bg-slate-100 rounded-lg"
+                  className="p-1.5 text-slate-500 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
                 >
                   <Printer className="w-4 h-4" />
                 </button>
 
                 <button
+                  type="button"
                   onClick={() => onEdit(pedido)}
                   title="Editar pedido"
-                  className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg"
+                  className="p-1.5 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 rounded-lg"
                 >
                   <Edit2 className="w-4 h-4" />
                 </button>
 
                 <button
-                  onClick={() => onDelete(pedido.id)}
+                  type="button"
+                  onClick={() => onDelete(pedido)}
                   title="Eliminar pedido"
-                  className="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg"
+                  className="p-1.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>

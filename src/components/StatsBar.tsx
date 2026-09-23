@@ -1,124 +1,245 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Pedido } from '@/types/pedido';
-import { Scissors, Truck, DollarSign, AlertCircle, PackageCheck, Wallet } from 'lucide-react';
+import { getTodayDateString } from '@/lib/mockData';
+import { Scissors, Truck, AlertCircle, PackageCheck, Wallet, ArrowUpRight, ArrowDownRight, Minus } from 'lucide-react';
 
 interface StatsBarProps {
   pedidos: Pedido[];
+  allPedidos?: Pedido[];
+  activeFilterKey?: string;
+  onFilterClick?: (filterType: 'todos' | 'por_armar' | 'por_entregar' | 'cobrado' | 'saldos') => void;
 }
 
-export const StatsBar: React.FC<StatsBarProps> = ({ pedidos }) => {
+export const StatsBar: React.FC<StatsBarProps> = ({
+  pedidos,
+  allPedidos = [],
+  activeFilterKey,
+  onFilterClick,
+}) => {
   const total = pedidos.length;
   const porArmar = pedidos.filter((p) => !p.hecho).length;
   const porEntregar = pedidos.filter((p) => !p.entregado).length;
-  const listos = pedidos.filter((p) => p.hecho && p.entregado).length;
 
   const totalYape = pedidos.reduce((acc, p) => acc + (Number(p.pago_yape) || 0), 0);
   const totalEfectivo = pedidos.reduce((acc, p) => acc + (Number(p.pago_efectivo) || 0), 0);
   const totalCobrado = totalYape + totalEfectivo;
-
   const totalSaldos = pedidos.reduce((acc, p) => acc + (Number(p.saldo) || 0), 0);
 
+  // Variación vs Ayer
+  const todayStr = useMemo(() => getTodayDateString(0), []);
+  const yesterdayStr = useMemo(() => getTodayDateString(-1), []);
+
+  const { varPedidos, varCobrado, varSaldos } = useMemo(() => {
+    const pToday = allPedidos.filter((p) => p.fecha === todayStr);
+    const pYesterday = allPedidos.filter((p) => p.fecha === yesterdayStr);
+
+    const cobToday = pToday.reduce((acc, p) => acc + (Number(p.pago_yape) || 0) + (Number(p.pago_efectivo) || 0), 0);
+    const cobYesterday = pYesterday.reduce((acc, p) => acc + (Number(p.pago_yape) || 0) + (Number(p.pago_efectivo) || 0), 0);
+
+    const salToday = pToday.reduce((acc, p) => acc + (Number(p.saldo) || 0), 0);
+    const salYesterday = pYesterday.reduce((acc, p) => acc + (Number(p.saldo) || 0), 0);
+
+    return {
+      varPedidos: pToday.length - pYesterday.length,
+      varCobrado: cobToday - cobYesterday,
+      varSaldos: salToday - salYesterday,
+    };
+  }, [allPedidos, todayStr, yesterdayStr]);
+
+  const renderTrend = (diff: number, suffix = '', inverse = false) => {
+    if (diff === 0) {
+      return (
+        <span className="inline-flex items-center gap-0.5 text-[10px] text-slate-400 font-medium">
+          <Minus className="w-3 h-3" /> igual vs ayer
+        </span>
+      );
+    }
+    const isPositive = diff > 0;
+    const isGood = inverse ? !isPositive : isPositive;
+
+    return (
+      <span
+        className={`inline-flex items-center gap-0.5 text-[10px] font-bold ${
+          isGood ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
+        }`}
+      >
+        {isPositive ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
+        {isPositive ? `+${diff}${suffix}` : `${diff}${suffix}`} vs ayer
+      </span>
+    );
+  };
+
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-6">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4 mb-6">
       
-      {/* 1. Total Pedidos */}
-      <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
-        <div>
-          <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Pedidos</p>
-          <p className="text-xl sm:text-2xl font-black text-slate-800 mt-0.5">{total}</p>
-          <p className="text-[11px] text-slate-400 mt-0.5">En esta vista</p>
-        </div>
-        <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center">
-          <PackageCheck className="w-5 h-5" />
-        </div>
-      </div>
-
-      {/* 2. Por Armar (Hecho: No) */}
-      <div className={`p-3.5 sm:p-4 rounded-2xl border transition-all flex items-center justify-between ${
-        porArmar > 0 
-          ? 'bg-rose-50/70 border-rose-200 text-rose-950' 
-          : 'bg-white border-slate-200/80 text-slate-800'
-      }`}>
-        <div>
-          <p className="text-xs font-semibold text-rose-600 uppercase tracking-wider">Por Confeccionar</p>
-          <div className="flex items-baseline gap-1.5 mt-0.5">
-            <span className="text-xl sm:text-2xl font-black text-rose-700">{porArmar}</span>
-            <span className="text-xs font-medium text-rose-600">ramos</span>
+      {/* 1. Total Pedidos (Clicable) */}
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={() => onFilterClick?.('todos')}
+        className={`bg-white dark:bg-slate-900 p-4 rounded-3xl border transition-all cursor-pointer select-none text-left shadow-xs hover:shadow-md hover:-translate-y-0.5 ${
+          activeFilterKey === 'todos'
+            ? 'ring-2 ring-slate-900 dark:ring-white border-slate-900 dark:border-white'
+            : 'border-slate-200/90 dark:border-slate-800 hover:border-slate-300'
+        }`}
+      >
+        <div className="flex items-center justify-between">
+          <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Pedidos</p>
+          <div className="w-9 h-9 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center">
+            <PackageCheck className="w-4 h-4" />
           </div>
-          <p className="text-[11px] text-rose-500/90 mt-0.5">
-            {porArmar === 0 ? '¡Todo preparado!' : 'Pendientes de armar'}
-          </p>
         </div>
-        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-          porArmar > 0 ? 'bg-rose-500 text-white shadow-sm shadow-rose-300' : 'bg-slate-100 text-slate-400'
-        }`}>
-          <Scissors className="w-5 h-5" />
+        <p className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mt-1">
+          {total}
+        </p>
+        <div className="mt-1 flex items-center justify-between">
+          <span className="text-[11px] text-slate-400">Total en vista</span>
+          {renderTrend(varPedidos)}
         </div>
       </div>
 
-      {/* 3. Por Entregar */}
-      <div className={`p-3.5 sm:p-4 rounded-2xl border transition-all flex items-center justify-between ${
-        porEntregar > 0 
-          ? 'bg-amber-50/70 border-amber-200 text-amber-950' 
-          : 'bg-white border-slate-200/80 text-slate-800'
-      }`}>
-        <div>
-          <p className="text-xs font-semibold text-amber-700 uppercase tracking-wider">Por Entregar</p>
-          <div className="flex items-baseline gap-1.5 mt-0.5">
-            <span className="text-xl sm:text-2xl font-black text-amber-800">{porEntregar}</span>
-            <span className="text-xs font-medium text-amber-700">pedidos</span>
+      {/* 2. Por Confeccionar (Clicable) */}
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={() => onFilterClick?.('por_armar')}
+        className={`p-4 rounded-3xl border transition-all cursor-pointer select-none text-left shadow-xs hover:shadow-md hover:-translate-y-0.5 ${
+          activeFilterKey === 'por_armar'
+            ? 'ring-2 ring-rose-500 border-rose-500'
+            : porArmar > 0
+            ? 'bg-rose-50/70 dark:bg-rose-950/20 border-rose-200/80 dark:border-rose-900/50 hover:border-rose-300'
+            : 'bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-800'
+        }`}
+      >
+        <div className="flex items-center justify-between">
+          <p className="text-[11px] font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wider">
+            Por Confeccionar
+          </p>
+          <div className={`w-9 h-9 rounded-2xl flex items-center justify-center ${
+            porArmar > 0
+              ? 'bg-rose-500 text-white shadow-sm shadow-rose-200 dark:shadow-none'
+              : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
+          }`}>
+            <Scissors className="w-4 h-4" />
           </div>
-          <p className="text-[11px] text-amber-600/90 mt-0.5">
-            {porEntregar === 0 ? 'Entregas al día' : 'En camino / recojo'}
-          </p>
         </div>
-        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-          porEntregar > 0 ? 'bg-amber-500 text-white shadow-sm shadow-amber-300' : 'bg-slate-100 text-slate-400'
-        }`}>
-          <Truck className="w-5 h-5" />
+        <div className="flex items-baseline gap-1.5 mt-1">
+          <span className="text-2xl sm:text-3xl font-black text-rose-700 dark:text-rose-400">
+            {porArmar}
+          </span>
+          <span className="text-xs font-semibold text-rose-600 dark:text-rose-400">ramos</span>
         </div>
-      </div>
-
-      {/* 4. Total Cobrado */}
-      <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
-        <div>
-          <p className="text-xs font-medium text-emerald-700 uppercase tracking-wider">Cobrado</p>
-          <p className="text-xl sm:text-2xl font-black text-emerald-800 mt-0.5">
-            S/ {totalCobrado.toFixed(2)}
-          </p>
-          <p className="text-[11px] text-slate-500 mt-0.5">
-            Yape: S/ {totalYape.toFixed(0)} | Efec: S/ {totalEfectivo.toFixed(0)}
-          </p>
-        </div>
-        <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100">
-          <Wallet className="w-5 h-5" />
+        <div className="mt-1">
+          <span className="text-[11px] font-semibold text-rose-500/90 dark:text-rose-400/80">
+            {porArmar === 0 ? '✨ Todo listo' : 'Tocar para filtrar'}
+          </span>
         </div>
       </div>
 
-      {/* 5. Saldos Pendientes */}
-      <div className={`col-span-2 sm:col-span-1 p-3.5 sm:p-4 rounded-2xl border transition-all flex items-center justify-between ${
-        totalSaldos > 0 
-          ? 'bg-rose-50/90 border-rose-300 text-rose-950' 
-          : 'bg-emerald-50/50 border-emerald-200 text-emerald-900'
-      }`}>
-        <div>
-          <p className="text-xs font-bold text-rose-700 uppercase tracking-wider flex items-center gap-1">
+      {/* 3. Por Entregar (Clicable) */}
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={() => onFilterClick?.('por_entregar')}
+        className={`p-4 rounded-3xl border transition-all cursor-pointer select-none text-left shadow-xs hover:shadow-md hover:-translate-y-0.5 ${
+          activeFilterKey === 'por_entregar'
+            ? 'ring-2 ring-amber-500 border-amber-500'
+            : porEntregar > 0
+            ? 'bg-amber-50/70 dark:bg-amber-950/20 border-amber-200/80 dark:border-amber-900/50 hover:border-amber-300'
+            : 'bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-800'
+        }`}
+      >
+        <div className="flex items-center justify-between">
+          <p className="text-[11px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
+            Por Entregar
+          </p>
+          <div className={`w-9 h-9 rounded-2xl flex items-center justify-center ${
+            porEntregar > 0
+              ? 'bg-amber-500 text-white shadow-sm shadow-amber-200 dark:shadow-none'
+              : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
+          }`}>
+            <Truck className="w-4 h-4" />
+          </div>
+        </div>
+        <div className="flex items-baseline gap-1.5 mt-1">
+          <span className="text-2xl sm:text-3xl font-black text-amber-800 dark:text-amber-300">
+            {porEntregar}
+          </span>
+          <span className="text-xs font-semibold text-amber-700 dark:text-amber-400">pedidos</span>
+        </div>
+        <div className="mt-1">
+          <span className="text-[11px] font-semibold text-amber-600/90 dark:text-amber-400/80">
+            {porEntregar === 0 ? '✓ Al día' : 'Tocar para ver ruta'}
+          </span>
+        </div>
+      </div>
+
+      {/* 4. Total Cobrado (Clicable) */}
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={() => onFilterClick?.('cobrado')}
+        className={`bg-white dark:bg-slate-900 p-4 rounded-3xl border transition-all cursor-pointer select-none text-left shadow-xs hover:shadow-md hover:-translate-y-0.5 ${
+          activeFilterKey === 'cobrado'
+            ? 'ring-2 ring-emerald-600 border-emerald-600'
+            : 'border-slate-200/90 dark:border-slate-800 hover:border-emerald-300'
+        }`}
+      >
+        <div className="flex items-center justify-between">
+          <p className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">
+            Cobrado
+          </p>
+          <div className="w-9 h-9 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/50 flex items-center justify-center">
+            <Wallet className="w-4 h-4" />
+          </div>
+        </div>
+        <p className="text-2xl sm:text-3xl font-black text-emerald-800 dark:text-emerald-300 mt-1 font-mono tracking-tight">
+          S/ {totalCobrado.toFixed(2)}
+        </p>
+        <div className="mt-1 flex items-center justify-between">
+          <span className="text-[10px] text-slate-400 font-mono">
+            Y: S/{totalYape.toFixed(0)} • E: S/{totalEfectivo.toFixed(0)}
+          </span>
+          {renderTrend(varCobrado, ' S/')}
+        </div>
+      </div>
+
+      {/* 5. Saldos por Cobrar (Clicable - Filtra al instante) */}
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={() => onFilterClick?.('saldos')}
+        className={`col-span-2 sm:col-span-1 p-4 rounded-3xl border transition-all cursor-pointer select-none text-left shadow-xs hover:shadow-md hover:-translate-y-0.5 ${
+          activeFilterKey === 'saldos'
+            ? 'ring-2 ring-amber-500 border-amber-500 bg-amber-100/80 dark:bg-amber-950/60'
+            : totalSaldos > 0
+            ? 'bg-amber-50/90 dark:bg-amber-950/30 border-amber-300/90 dark:border-amber-800 hover:border-amber-400'
+            : 'bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200/80 dark:border-emerald-900/40'
+        }`}
+      >
+        <div className="flex items-center justify-between">
+          <p className="text-[11px] font-extrabold text-amber-800 dark:text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
             <span>Saldos por Cobrar</span>
-            {totalSaldos > 0 && <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>}
+            {totalSaldos > 0 && <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>}
           </p>
-          <p className="text-xl sm:text-2xl font-black text-rose-700 mt-0.5">
-            S/ {totalSaldos.toFixed(2)}
-          </p>
-          <p className="text-[11px] text-rose-600 font-medium mt-0.5">
-            {totalSaldos > 0 ? '¡Cobrar antes de entregar!' : 'Todos cancelados'}
-          </p>
+          <div className={`w-9 h-9 rounded-2xl flex items-center justify-center ${
+            totalSaldos > 0
+              ? 'bg-amber-500 text-white shadow-sm shadow-amber-200 dark:shadow-none'
+              : 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300'
+          }`}>
+            <AlertCircle className="w-4 h-4" />
+          </div>
         </div>
-        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-          totalSaldos > 0 ? 'bg-rose-600 text-white shadow-sm shadow-rose-300' : 'bg-emerald-100 text-emerald-700'
-        }`}>
-          <AlertCircle className="w-5 h-5" />
+        <p className="text-2xl sm:text-3xl font-black text-amber-900 dark:text-amber-200 mt-1 font-mono tracking-tight">
+          S/ {totalSaldos.toFixed(2)}
+        </p>
+        <div className="mt-1 flex items-center justify-between">
+          <span className="text-[11px] font-bold text-amber-700 dark:text-amber-400">
+            {totalSaldos > 0 ? '👉 Tocar para verlos' : '✓ Todos al día'}
+          </span>
+          {renderTrend(varSaldos, ' S/', true)}
         </div>
       </div>
 

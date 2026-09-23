@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Pedido } from '@/types/pedido';
-import { Printer, X, Heart, MapPin, Phone, Clock, DollarSign } from 'lucide-react';
+import { Printer, X, Heart, Clock, MapPin, AlertCircle } from 'lucide-react';
 
 interface TicketPrintModalProps {
   pedido: Pedido | null;
@@ -20,16 +20,17 @@ export const TicketPrintModal: React.FC<TicketPrintModalProps> = ({
   };
 
   const hasSaldo = Number(pedido.saldo) > 0;
+  const targetName = pedido.cliente?.trim() || 'Cliente';
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200">
+      <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
         
         {/* Encabezado sin impresión */}
         <div className="bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between no-print">
           <div className="flex items-center gap-2">
             <Printer className="w-4 h-4 text-rose-400" />
-            <span className="font-bold text-sm">Comanda / Tarjeta de Ramo</span>
+            <span className="font-bold text-sm">Tarjeta de Ramo (Lista para Imprimir)</span>
           </div>
           <button
             onClick={onClose}
@@ -39,126 +40,104 @@ export const TicketPrintModal: React.FC<TicketPrintModalProps> = ({
           </button>
         </div>
 
-        {/* CONTENIDO IMPRIMIBLE DEL TICKET */}
-        <div id="printable-ticket" className="p-6 bg-white text-slate-900 text-sm">
+        {/* CONTENIDO IMPRIMIBLE DE LA TARJETA (Solo lo esencial para pegar en el ramo) */}
+        <div id="printable-ticket" className="p-8 bg-white text-slate-900">
           
-          {/* Logo y Encabezado del Ticket */}
-          <div className="text-center pb-4 border-b-2 border-dashed border-slate-300">
-            <span className="text-3xl block mb-1">🌸</span>
-            <h2 className="text-lg font-black tracking-tight uppercase">Sistema v1.0</h2>
-            <p className="text-xs text-slate-500 font-medium">Puno • Juliaca</p>
-            <div className="mt-2 inline-block bg-slate-100 px-3 py-1 rounded-full font-mono text-xs font-bold">
-              {pedido.id}
-            </div>
-          </div>
-
-          {/* Información Principal */}
-          <div className="py-4 space-y-2 border-b-2 border-dashed border-slate-300">
-            <div className="flex justify-between items-baseline">
-              <span className="text-xs font-bold text-slate-500 uppercase">Fecha / Hora:</span>
-              <span className="font-bold text-slate-800">{pedido.fecha} - {pedido.hora}</span>
+          <div className="border-2 border-slate-800 rounded-3xl p-6 relative">
+            
+            {/* Cabecera floral estilizada */}
+            <div className="text-center pb-4 border-b border-slate-200">
+              <span className="text-3xl block mb-1">🌸</span>
+              <p className="text-xs uppercase tracking-widest text-slate-500 font-bold">
+                Detalle Especial • Florería
+              </p>
+              <div className="mt-1 flex items-center justify-center gap-2 text-xs font-mono text-slate-400">
+                <span>{pedido.id}</span>
+                <span>•</span>
+                <span>{pedido.ciudad}</span>
+              </div>
             </div>
 
-            <div className="flex justify-between items-baseline">
-              <span className="text-xs font-bold text-slate-500 uppercase">Modalidad:</span>
-              <span className="font-bold text-slate-800">
-                {pedido.tipo_entrega === 'Delivery' ? '🛵 DELIVERY' : '🛍️ RECOJO EN TIENDA'}
+            {/* 1. Destinatario (Grande y destacado) */}
+            <div className="py-4 text-center border-b border-slate-200">
+              <span className="text-[11px] font-bold uppercase tracking-widest text-rose-600 block mb-1">
+                PARA:
               </span>
+              <h2 className="text-2xl font-black text-slate-900 tracking-tight capitalize">
+                {targetName}
+              </h2>
             </div>
 
-            <div className="flex justify-between items-baseline">
-              <span className="text-xs font-bold text-slate-500 uppercase">Ciudad:</span>
-              <span className="font-bold text-slate-800">{pedido.ciudad}</span>
+            {/* 2. Ramo / Producto confeccionado */}
+            <div className="py-3 text-center border-b border-slate-200 bg-slate-50/60 rounded-xl my-3">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">
+                Arreglo Floral:
+              </span>
+              <p className="text-base font-extrabold text-slate-800 capitalize">
+                {pedido.producto}
+              </p>
             </div>
 
-            {pedido.cliente && (
-              <div className="flex justify-between items-baseline">
-                <span className="text-xs font-bold text-slate-500 uppercase">Cliente / Destino:</span>
-                <span className="font-bold text-slate-900">{pedido.cliente}</span>
+            {/* 3. Mensaje de la Tarjeta de Dedicatoria (Grande, elegante y central) */}
+            <div className="py-4 my-2 text-center">
+              <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                <Heart className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
+                <span>Mensaje de la Tarjeta</span>
+                <Heart className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
+              </div>
+
+              {pedido.dedicatoria ? (
+                <div className="p-4 bg-amber-50/70 border border-amber-200/90 rounded-2xl">
+                  <p className="text-base sm:text-lg font-serif italic text-slate-900 leading-relaxed">
+                    &ldquo;{pedido.dedicatoria}&rdquo;
+                  </p>
+                </div>
+              ) : (
+                <div className="p-4 bg-slate-50 rounded-2xl text-slate-400 text-xs italic">
+                  (Sin dedicatoria escrita)
+                </div>
+              )}
+            </div>
+
+            {/* 4. Hora y Datos de Entrega */}
+            <div className="pt-3 border-t border-slate-200 flex items-center justify-between text-xs font-semibold text-slate-700">
+              <div className="flex items-center gap-1.5">
+                <Clock className="w-4 h-4 text-slate-500" />
+                <span className="text-sm font-bold text-slate-900">
+                  {pedido.hora} ({pedido.fecha})
+                </span>
+              </div>
+
+              <div>
+                <span className="px-2.5 py-1 rounded-lg bg-slate-100 font-bold text-slate-800">
+                  {pedido.tipo_entrega === 'Delivery' ? '🛵 DELIVERY' : '🛍️ RECOJO'}
+                </span>
+              </div>
+            </div>
+
+            {/* Dirección si es delivery */}
+            {pedido.tipo_entrega === 'Delivery' && pedido.direccion && (
+              <div className="mt-2 pt-2 border-t border-dashed border-slate-200 text-xs text-slate-600 flex items-start gap-1.5">
+                <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0 mt-0.5" />
+                <span className="font-medium">{pedido.direccion}</span>
               </div>
             )}
 
-            <div className="flex justify-between items-baseline">
-              <span className="text-xs font-bold text-slate-500 uppercase">Celular:</span>
-              <span className="font-mono font-bold text-slate-900">{pedido.celular}</span>
-            </div>
-
-            {pedido.direccion && (
-              <div className="pt-1">
-                <span className="text-xs font-bold text-slate-500 uppercase block">Dirección:</span>
-                <p className="font-medium text-slate-800 bg-slate-50 p-1.5 rounded border border-slate-200 text-xs">
-                  {pedido.direccion}
+            {/* Alerta de Saldo para el repartidor/tienda */}
+            {hasSaldo && (
+              <div className="mt-3 p-2 bg-rose-50 border border-rose-200 rounded-xl text-center">
+                <p className="text-xs font-extrabold text-rose-700">
+                  ⚠️ COBRAR SALDO: S/ {Number(pedido.saldo).toFixed(2)}
                 </p>
               </div>
             )}
-          </div>
 
-          {/* Detalle del Ramo */}
-          <div className="py-4 border-b-2 border-dashed border-slate-300">
-            <span className="text-xs font-bold text-slate-500 uppercase block mb-1">
-              Producto Confeccionado:
-            </span>
-            <div className="p-2.5 bg-rose-50 border border-rose-200 rounded-xl">
-              <p className="font-black text-rose-950 text-base">{pedido.producto}</p>
-              {pedido.notas && (
-                <p className="text-xs text-rose-800 mt-1 font-medium">⚠️ Nota: {pedido.notas}</p>
-              )}
-            </div>
-          </div>
-
-          {/* Dedicatoria (Tarjeta de Regalo) */}
-          {pedido.dedicatoria && (
-            <div className="py-4 border-b-2 border-dashed border-slate-300">
-              <div className="flex items-center gap-1 text-xs font-bold text-rose-600 uppercase mb-1.5">
-                <Heart className="w-3.5 h-3.5 fill-rose-500" />
-                <span>Tarjeta de Dedicatoria:</span>
-              </div>
-              <div className="p-3 bg-amber-50/70 border border-amber-200 rounded-xl text-slate-800 italic font-serif text-sm">
-                &ldquo;{pedido.dedicatoria}&rdquo;
-              </div>
-            </div>
-          )}
-
-          {/* Montos y Saldos */}
-          <div className="py-4 space-y-1.5 border-b-2 border-dashed border-slate-300 font-mono text-xs">
-            <div className="flex justify-between text-slate-600">
-              <span>Precio Producto:</span>
-              <span>S/ {Number(pedido.precio_producto).toFixed(2)}</span>
-            </div>
-            {Number(pedido.costo_delivery) > 0 && (
-              <div className="flex justify-between text-slate-600">
-                <span>Costo Delivery:</span>
-                <span>S/ {Number(pedido.costo_delivery).toFixed(2)}</span>
-              </div>
-            )}
-            <div className="flex justify-between text-purple-700">
-              <span>Pagado por Yape:</span>
-              <span>S/ {Number(pedido.pago_yape).toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between text-emerald-700">
-              <span>Pagado en Efectivo:</span>
-              <span>S/ {Number(pedido.pago_efectivo).toFixed(2)}</span>
-            </div>
-
-            {/* Saldo a Cobrar */}
-            <div className={`flex justify-between text-sm font-bold pt-2 border-t border-slate-200 ${
-              hasSaldo ? 'text-rose-700 bg-rose-50 p-2 rounded-lg' : 'text-emerald-700'
-            }`}>
-              <span>SALDO A COBRAR:</span>
-              <span>S/ {Number(pedido.saldo).toFixed(2)}</span>
-            </div>
-          </div>
-
-          {/* Pie del ticket */}
-          <div className="pt-4 text-center text-[11px] text-slate-400">
-            <p>¡Gracias por su preferencia!</p>
-            <p>Sistema v1.0 • Control de Pedidos</p>
           </div>
 
         </div>
 
         {/* Botones de Acción (no se imprimen) */}
-        <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-end gap-2 no-print">
+        <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-end gap-2.5 no-print">
           <button
             onClick={onClose}
             className="px-4 py-2 text-slate-600 hover:text-slate-900 text-xs font-semibold rounded-xl"
@@ -167,10 +146,10 @@ export const TicketPrintModal: React.FC<TicketPrintModalProps> = ({
           </button>
           <button
             onClick={handlePrint}
-            className="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm active:scale-95 transition-all"
+            className="px-6 py-2.5 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm transition-all"
           >
             <Printer className="w-4 h-4" />
-            <span>Imprimir Ticket / Tarjeta</span>
+            <span>Imprimir Tarjeta para el Ramo</span>
           </button>
         </div>
 
