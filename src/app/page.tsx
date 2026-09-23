@@ -305,10 +305,10 @@ export default function HomePage() {
       <footer className="bg-white border-t border-slate-200 py-4 mt-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
           <p>
-            🌸 <strong>Florería Flores & Ramos</strong> — Sistema de control de pedidos para Puno y Juliaca.
+            🌸 <strong>Florería Flores & Ramos</strong>
           </p>
-          <p className="text-slate-400">
-            Diseñado para operar estable en Vercel por 6+ meses con cero costo operativo.
+          <p className="text-slate-600 font-medium">
+            Diseñado y realizado por <span className="text-rose-600 font-semibold">Cristian</span>
           </p>
         </div>
       </footer>
