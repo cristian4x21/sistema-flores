@@ -78,55 +78,58 @@ export const TopRamosModal: React.FC<TopRamosModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
-      <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs overscroll-contain">
+      <div className="relative w-full max-w-2xl max-h-[90vh] flex flex-col bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         
         {/* Cabecera */}
-        <div className="bg-gradient-to-r from-amber-500 via-rose-500 to-pink-500 px-6 py-4 text-white flex items-center justify-between">
+        <div className="shrink-0 bg-gradient-to-r from-amber-500 via-rose-500 to-pink-500 px-5 sm:px-6 py-4 text-white flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shadow-inner">
+            <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shadow-inner shrink-0">
               🏆
             </div>
             <div>
-              <h2 className="text-lg sm:text-xl font-black tracking-tight">
-                Ranking de Ramos Más Pedidos
+              <h2 className="text-base sm:text-xl font-black tracking-tight">
+                Ranking de Ramos Más Vendidos
               </h2>
-              <p className="text-xs text-rose-100">
-                Conoce cuáles son los arreglos favoritos de tus clientes y los más vendidos
+              <p className="text-[11px] sm:text-xs text-rose-100">
+                Arreglos favoritos de tus clientes y los que más salida tienen
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-full text-white/80 hover:text-white hover:bg-white/20 transition-colors"
+            className="p-1.5 rounded-full text-white/80 hover:text-white hover:bg-white/20 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Contenido */}
-        <div className="p-6 max-h-[75vh] overflow-y-auto space-y-5">
+        {/* Contenido con scroll táctil suave para celular */}
+        <div
+          className="flex-1 overflow-y-auto overscroll-contain touch-pan-y touch-scroll p-4 sm:p-6 space-y-4 text-slate-800 dark:text-slate-200"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+        >
           
           {/* Tarjeta Destacada: Ramo Estrella */}
           {ramoEstrella && (
-            <div className="bg-gradient-to-r from-amber-50 to-rose-50 border border-amber-200/80 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+            <div className="bg-gradient-to-r from-amber-50 via-rose-50 to-pink-50 dark:from-amber-950/30 dark:via-rose-950/20 dark:to-slate-800/80 border border-amber-200/80 dark:border-amber-800/50 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
               <div className="flex items-center gap-3">
-                <span className="text-3xl">🥇</span>
+                <span className="text-3xl shrink-0">🥇</span>
                 <div>
                   <span className="inline-block text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500 text-white mb-0.5">
                     Ramo Estrella (#1 en Ventas)
                   </span>
-                  <h3 className="text-base sm:text-lg font-black text-slate-800 capitalize">
+                  <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white capitalize">
                     {ramoEstrella.nombre}
                   </h3>
-                  <p className="text-xs text-slate-600">
-                    Es el arreglo más solicitado con <strong className="text-rose-600">{ramoEstrella.cantidad} pedidos</strong> ({ramoEstrella.porcentaje.toFixed(0)}% del total).
+                  <p className="text-xs text-slate-600 dark:text-slate-300">
+                    Es el arreglo más solicitado con <strong className="text-rose-600 dark:text-rose-400">{ramoEstrella.cantidad} pedidos</strong> ({ramoEstrella.porcentaje.toFixed(0)}% del total).
                   </p>
                 </div>
               </div>
-              <div className="text-right sm:border-l sm:border-amber-200 sm:pl-4">
-                <span className="text-xs text-slate-500 block">Total generado</span>
-                <span className="text-lg font-black text-emerald-700 font-mono">
+              <div className="text-left sm:text-right sm:border-l sm:border-amber-200 dark:sm:border-amber-800 sm:pl-4 shrink-0">
+                <span className="text-[11px] text-slate-500 dark:text-slate-400 block">Total generado</span>
+                <span className="text-lg font-black text-emerald-600 dark:text-emerald-400 font-mono">
                   S/ {ramoEstrella.totalVendido.toFixed(2)}
                 </span>
               </div>
@@ -141,19 +144,19 @@ export const TopRamosModal: React.FC<TopRamosModalProps> = ({
               placeholder="Buscar un ramo o detalle en el ranking..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-hidden focus:border-rose-400"
+              className="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-hidden focus:border-rose-400"
             />
           </div>
 
           {/* Lista de Ranking */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between text-xs font-bold text-slate-400 uppercase tracking-wider px-1">
+          <div className="space-y-2.5">
+            <div className="flex items-center justify-between text-[11px] font-bold text-slate-400 uppercase tracking-wider px-1">
               <span>Posición / Producto</span>
               <span>Pedidos / % Salida</span>
             </div>
 
             {filtrados.length === 0 ? (
-              <p className="text-center py-8 text-sm text-slate-500">
+              <p className="text-center py-8 text-sm text-slate-500 dark:text-slate-400">
                 No se encontraron ramos con ese nombre.
               </p>
             ) : (
@@ -164,35 +167,35 @@ export const TopRamosModal: React.FC<TopRamosModalProps> = ({
                 return (
                   <div
                     key={item.nombre}
-                    className="p-3.5 rounded-2xl bg-white border border-slate-200/80 hover:border-rose-200 hover:shadow-xs transition-all space-y-2"
+                    className="p-3.5 rounded-2xl bg-white dark:bg-slate-850 border border-slate-200/90 dark:border-slate-800 hover:border-rose-200 dark:hover:border-rose-800 hover:shadow-xs transition-all space-y-2"
                   >
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <span className="w-7 h-7 rounded-xl bg-slate-100 flex items-center justify-center font-bold text-xs text-slate-700 shrink-0 font-mono">
+                        <span className="w-7 h-7 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center font-bold text-xs text-slate-700 dark:text-slate-300 shrink-0 font-mono">
                           {medalla || `#${idx + 1}`}
                         </span>
                         <div className="truncate">
-                          <h4 className="text-sm font-bold text-slate-900 capitalize truncate">
+                          <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100 capitalize truncate">
                             {item.nombre}
                           </h4>
-                          <span className="text-[11px] text-slate-500 font-mono">
+                          <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
                             Total: S/ {item.totalVendido.toFixed(2)}
                           </span>
                         </div>
                       </div>
 
                       <div className="text-right shrink-0">
-                        <span className="inline-block px-2.5 py-0.5 rounded-lg bg-rose-50 text-rose-700 font-black text-xs border border-rose-100">
+                        <span className="inline-block px-2.5 py-0.5 rounded-lg bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 font-black text-xs border border-rose-100 dark:border-rose-900">
                           {item.cantidad} {item.cantidad === 1 ? 'pedido' : 'pedidos'}
                         </span>
-                        <span className="block text-[11px] text-slate-400 font-medium mt-0.5">
+                        <span className="block text-[10px] text-slate-400 font-medium mt-0.5">
                           {item.porcentaje.toFixed(1)}% del catálogo
                         </span>
                       </div>
                     </div>
 
                     {/* Barra de Progreso de Popularidad */}
-                    <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                    <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full transition-all duration-500 ${
                           idx === 0
@@ -201,7 +204,7 @@ export const TopRamosModal: React.FC<TopRamosModalProps> = ({
                             ? 'bg-rose-400'
                             : idx === 2
                             ? 'bg-pink-400'
-                            : 'bg-slate-300'
+                            : 'bg-slate-300 dark:bg-slate-600'
                         }`}
                         style={{ width: `${Math.max(item.porcentaje, 4)}%` }}
                       ></div>
@@ -215,13 +218,13 @@ export const TopRamosModal: React.FC<TopRamosModalProps> = ({
         </div>
 
         {/* Pie del Modal */}
-        <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
+        <div className="shrink-0 p-4 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
           <span>
             Total analizado: <strong>{totalUnidades} pedidos</strong>
           </span>
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-bold transition-all text-xs"
+            className="px-4 py-2 bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white rounded-xl font-bold transition-all text-xs"
           >
             Cerrar
           </button>

@@ -137,32 +137,36 @@ export const PedidoModal: React.FC<PedidoModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
-      <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs overscroll-contain">
+      <div className="relative w-full max-w-2xl max-h-[92vh] flex flex-col bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         
         {/* Cabecera del Modal */}
-        <div className="bg-gradient-to-r from-rose-500 to-rose-600 px-6 py-4 text-white flex items-center justify-between">
+        <div className="shrink-0 bg-gradient-to-r from-rose-500 to-rose-600 px-5 sm:px-6 py-4 text-white flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <span className="text-2xl">🌸</span>
             <div>
-              <h2 className="text-lg sm:text-xl font-bold">
+              <h2 className="text-base sm:text-xl font-bold">
                 {initialData ? `Editar Pedido (${initialData.id})` : 'Registrar Nuevo Pedido'}
               </h2>
-              <p className="text-xs text-rose-100">
+              <p className="text-[11px] sm:text-xs text-rose-100">
                 Detalles del ramo, cliente, pagos y entrega
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-full text-rose-100 hover:text-white hover:bg-rose-700/50 transition-colors"
+            className="p-1.5 rounded-full text-rose-100 hover:text-white hover:bg-rose-700/50 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Formulario */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+        {/* Formulario con scroll táctil suave en celulares */}
+        <form
+          onSubmit={handleSubmit}
+          className="flex-1 overflow-y-auto overscroll-contain touch-pan-y touch-scroll p-4 sm:p-6 space-y-4 text-slate-800 dark:text-slate-200"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+        >
           
           {/* Fila 1: Celular y Cliente */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

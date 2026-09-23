@@ -108,7 +108,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="px-3.5 py-2 sm:px-4 sm:py-2.5 bg-gradient-to-r from-rose-500 via-pink-600 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white rounded-xl shadow-md shadow-rose-300/60 dark:shadow-none transition-all flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold active:scale-95 cursor-pointer"
             >
               <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span>Nuevo Pedido</span>
+              <span className="hidden sm:inline">Nuevo Pedido</span>
+              <span className="sm:hidden text-xs">Nuevo</span>
             </button>
 
           </div>

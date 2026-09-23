@@ -23,6 +23,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(30);
 
   // Modales
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -78,16 +79,23 @@ export default function HomePage() {
     });
   };
 
-  // 2. Cargar último filtro usado desde localStorage
+  // 2. Cargar último filtro usado desde localStorage o auto-detectar celular
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_FILTER_KEY);
+      const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
       if (saved) {
         const parsed = JSON.parse(saved);
         setFilters((prev) => ({
           ...prev,
           ...parsed,
           search: '', // El buscador inicia limpio para comodidad
+        }));
+      } else if (isMobile) {
+        // En celulares iniciar en tarjetas por defecto para mejor visualización
+        setFilters((prev) => ({
+          ...prev,
+          viewMode: 'cards',
         }));
       }
     } catch (e) {}
@@ -230,6 +238,16 @@ export default function HomePage() {
       return minA - minB;
     });
   }, [pedidos, filters, todayStr, tomorrowStr]);
+
+  // Reiniciar límite visible cuando cambien los filtros o búsqueda
+  useEffect(() => {
+    setVisibleCount(30);
+  }, [filters.dateMode, filters.customDate, filters.statusFilter, filters.ciudad, filters.tipoEntrega, filters.soloSaldo, filters.search]);
+
+  // Pedidos visibles progresivamente (máximo rendimiento y scroll a 60fps en celular)
+  const displayedPedidos = useMemo(() => {
+    return filteredPedidos.slice(0, visibleCount);
+  }, [filteredPedidos, visibleCount]);
 
   // Clic en tarjetas de KPI superiores para filtrar automáticamente la tabla
   const handleKpiFilterClick = (type: 'todos' | 'por_armar' | 'por_entregar' | 'cobrado' | 'saldos') => {
@@ -450,7 +468,7 @@ export default function HomePage() {
           </div>
         ) : filters.viewMode === 'table' ? (
           <PedidosTable
-            pedidos={filteredPedidos}
+            pedidos={displayedPedidos}
             onStatusChange={handleStatusChange}
             onRowClick={(p) => setDetailPedido(p)}
             onEdit={(p) => {
@@ -462,7 +480,7 @@ export default function HomePage() {
           />
         ) : (
           <PedidosCards
-            pedidos={filteredPedidos}
+            pedidos={displayedPedidos}
             onStatusChange={handleStatusChange}
             onRowClick={(p) => setDetailPedido(p)}
             onEdit={(p) => {
@@ -472,6 +490,33 @@ export default function HomePage() {
             onDelete={(p) => setDeletingPedido(p)}
             onPrint={(p) => setPrintingPedido(p)}
           />
+        )}
+
+        {/* Paginación / Carga progresiva para máximo rendimiento en teléfonos y PC */}
+        {filteredPedidos.length > visibleCount && (
+          <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-3 p-4 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-xs transition-colors">
+            <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium">
+              Mostrando <strong className="text-slate-900 dark:text-white font-bold">{Math.min(visibleCount, filteredPedidos.length)}</strong> de{' '}
+              <strong className="text-rose-600 dark:text-rose-400 font-black">{filteredPedidos.length}</strong> pedidos del historial
+            </div>
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <button
+                type="button"
+                onClick={() => setVisibleCount((prev) => Math.min(prev + 30, filteredPedidos.length))}
+                className="flex-1 sm:flex-initial px-4 py-2.5 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900/60 rounded-xl text-xs sm:text-sm font-bold transition-all active:scale-95 flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
+              >
+                <span>Cargar 30 más</span>
+                <span className="text-[11px] opacity-75">({filteredPedidos.length - visibleCount} restantes)</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setVisibleCount(filteredPedidos.length)}
+                className="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs sm:text-sm font-bold transition-all active:scale-95 cursor-pointer"
+              >
+                Ver todos ({filteredPedidos.length})
+              </button>
+            </div>
+          </div>
         )}
 
       </main>

@@ -52,8 +52,18 @@ export const PedidosTable: React.FC<PedidosTableProps> = ({
 
   return (
     <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm overflow-hidden transition-colors">
-      <div className="w-full">
-        <table className="w-full text-left border-collapse text-xs">
+      {/* Indicador táctil para teléfonos móviles */}
+      <div className="md:hidden px-4 py-2 bg-slate-100/90 dark:bg-slate-800/90 border-b border-slate-200 dark:border-slate-700/80 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+        <span className="flex items-center gap-1.5">
+          <span>👈👉</span> Desliza la tabla para ver todos los datos
+        </span>
+        <span className="text-[10px] font-bold bg-slate-200 dark:bg-slate-700 px-2 py-0.5 rounded-full">
+          {pedidos.length} {pedidos.length === 1 ? 'pedido' : 'pedidos'}
+        </span>
+      </div>
+
+      <div className="w-full overflow-x-auto touch-pan-x touch-scroll select-none" style={{ WebkitOverflowScrolling: 'touch' }}>
+        <table className="w-full min-w-[760px] md:min-w-full text-left border-collapse text-xs">
           <thead>
             <tr className="bg-emerald-950 text-white font-bold text-[11px] tracking-wider uppercase border-b border-emerald-900 select-none">
               <th className="py-3 px-3 min-w-[130px] w-[15%]">Semáforo de Estado</th>

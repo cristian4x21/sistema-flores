@@ -46,21 +46,21 @@ export const PedidoDetailModal: React.FC<PedidoDetailModalProps> = ({
   );
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
-      <div className="relative w-full max-w-xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden my-6 animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs overscroll-contain">
+      <div className="relative w-full max-w-xl max-h-[90vh] flex flex-col bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         
         {/* Cabecera */}
-        <div className="bg-gradient-to-r from-rose-500 to-rose-600 px-6 py-4 text-white flex items-center justify-between">
+        <div className="shrink-0 bg-gradient-to-r from-rose-500 to-rose-600 px-5 sm:px-6 py-4 text-white flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <span className="text-2xl">🌸</span>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold">Detalle del Pedido</h2>
+                <h2 className="text-base sm:text-lg font-bold">Detalle del Pedido</h2>
                 <span className="font-mono text-xs px-2 py-0.5 rounded-full bg-white/20 text-white font-bold">
                   {pedido.id}
                 </span>
               </div>
-              <p className="text-xs text-rose-100">
+              <p className="text-[11px] sm:text-xs text-rose-100">
                 {pedido.fecha} a las {pedido.hora}
               </p>
             </div>
@@ -73,8 +73,11 @@ export const PedidoDetailModal: React.FC<PedidoDetailModalProps> = ({
           </button>
         </div>
 
-        {/* Cuerpo del Detalle */}
-        <div className="p-6 space-y-5 max-h-[75vh] overflow-y-auto text-slate-800 dark:text-slate-200">
+        {/* Cuerpo del Detalle con scroll suave en celulares */}
+        <div
+          className="flex-1 overflow-y-auto overscroll-contain touch-pan-y touch-scroll p-4 sm:p-6 space-y-4 text-slate-800 dark:text-slate-200"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+        >
           
           {/* 1. Semáforo de Estado (Interactivo) */}
           <div className="bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-700/80">
@@ -277,7 +280,7 @@ export const PedidoDetailModal: React.FC<PedidoDetailModalProps> = ({
         </div>
 
         {/* Acciones al pie */}
-        <div className="p-4 bg-slate-50 dark:bg-slate-850 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2">
+        <div className="shrink-0 p-4 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
           <button
             onClick={() => onPrint(pedido)}
             className="px-3.5 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 rounded-xl transition-all flex items-center gap-1.5"

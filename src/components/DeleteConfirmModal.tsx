@@ -24,7 +24,7 @@ export const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
   const targetName = pedido.cliente?.trim() || pedido.producto;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs overscroll-contain">
       <div className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         
         {/* Cabecera */}

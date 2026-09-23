@@ -23,11 +23,11 @@ export const TicketPrintModal: React.FC<TicketPrintModalProps> = ({
   const targetName = pedido.cliente?.trim() || 'Cliente';
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs overscroll-contain">
+      <div className="relative w-full max-w-lg max-h-[92vh] flex flex-col bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
         
         {/* Encabezado sin impresión */}
-        <div className="bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between no-print">
+        <div className="shrink-0 bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between no-print">
           <div className="flex items-center gap-2">
             <Printer className="w-4 h-4 text-rose-400" />
             <span className="font-bold text-sm">Tarjeta de Ramo (Lista para Imprimir)</span>
@@ -41,7 +41,11 @@ export const TicketPrintModal: React.FC<TicketPrintModalProps> = ({
         </div>
 
         {/* CONTENIDO IMPRIMIBLE DE LA TARJETA (Solo lo esencial para pegar en el ramo) */}
-        <div id="printable-ticket" className="p-8 bg-white text-slate-900">
+        <div
+          id="printable-ticket"
+          className="flex-1 overflow-y-auto overscroll-contain touch-pan-y touch-scroll p-6 sm:p-8 bg-white text-slate-900"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+        >
           
           <div className="border-2 border-slate-800 rounded-3xl p-6 relative">
             
@@ -137,7 +141,7 @@ export const TicketPrintModal: React.FC<TicketPrintModalProps> = ({
         </div>
 
         {/* Botones de Acción (no se imprimen) */}
-        <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-end gap-2.5 no-print">
+        <div className="shrink-0 p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-end gap-2.5 no-print">
           <button
             onClick={onClose}
             className="px-4 py-2 text-slate-600 hover:text-slate-900 text-xs font-semibold rounded-xl"

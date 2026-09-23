@@ -37,7 +37,7 @@ export const PedidoFilters: React.FC<PedidoFiltersProps> = ({
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
         
         {/* Selector de Fechas Rápido + Chip Con Saldo */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0 scrollbar-none">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0 touch-pan-x touch-scroll scrollbar-none" style={{ WebkitOverflowScrolling: 'touch' }}>
           
           <button
             type="button"
