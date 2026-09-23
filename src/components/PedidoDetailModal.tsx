@@ -42,32 +42,32 @@ export const PedidoDetailModal: React.FC<PedidoDetailModalProps> = ({
   const isDelivery = pedido.tipo_entrega === 'Delivery';
 
   const whatsappText = encodeURIComponent(
-    `¡Hola! 🌸 Te saludamos de la Florería respecto a tu pedido de *${pedido.producto}*. Queríamos coordinar la entrega programada para hoy a las ${pedido.hora}.`
+    `¡Hola! 🌸 Te saludamos de *Loany Detalles* respecto a tu pedido de *${pedido.producto}*. Queríamos coordinar la entrega programada para hoy a las ${pedido.hora}.`
   );
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs overscroll-contain">
       <div className="relative w-full max-w-xl max-h-[90vh] flex flex-col bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         
-        {/* Cabecera */}
-        <div className="shrink-0 bg-gradient-to-r from-rose-500 to-rose-600 px-5 sm:px-6 py-4 text-white flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <span className="text-2xl">🌸</span>
+        {/* Cabecera con branding Loany */}
+        <div className="shrink-0 bg-gradient-to-r from-amber-600 via-amber-700 to-yellow-600 px-5 sm:px-6 py-4 text-white flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img src="/logo-loany-circle.png" alt="Loany" className="w-9 h-9 rounded-full object-cover ring-2 ring-white/50" />
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base sm:text-lg font-bold">Detalle del Pedido</h2>
+                <h2 className="text-base sm:text-lg font-bold font-brand">Detalle del Pedido</h2>
                 <span className="font-mono text-xs px-2 py-0.5 rounded-full bg-white/20 text-white font-bold">
                   {pedido.id}
                 </span>
               </div>
-              <p className="text-[11px] sm:text-xs text-rose-100">
-                {pedido.fecha} a las {pedido.hora}
+              <p className="text-[11px] sm:text-xs text-amber-100">
+                Loany Detalles • {pedido.fecha} a las {pedido.hora}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-full text-rose-100 hover:text-white hover:bg-rose-700/50 transition-colors"
+            className="p-1.5 rounded-full text-amber-100 hover:text-white hover:bg-white/20 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>

@@ -395,17 +395,17 @@ export default function HomePage() {
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
         
         {/* Banner de Información Rápida con Ramo Estrella */}
-        <div className="mb-4 bg-gradient-to-r from-rose-500/10 via-amber-500/10 to-slate-50 dark:from-rose-950/20 dark:via-amber-950/20 dark:to-slate-900 border border-rose-200/80 dark:border-rose-900/40 rounded-3xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+        <div className="mb-4 bg-gradient-to-r from-amber-100/70 via-yellow-50/50 to-amber-50/30 dark:from-amber-950/30 dark:via-yellow-950/20 dark:to-slate-900 border border-amber-200/90 dark:border-amber-900/40 rounded-3xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-slate-800 text-rose-500 flex items-center justify-center text-xl shadow-xs border border-rose-100 dark:border-slate-700 shrink-0">
-              💐
+            <div className="w-10 h-10 rounded-2xl bg-amber-100 dark:bg-slate-800 text-amber-700 dark:text-amber-300 flex items-center justify-center text-xl shadow-xs border border-amber-200/80 dark:border-slate-700 shrink-0">
+              🌻
             </div>
             <div>
-              <p className="text-xs sm:text-sm font-black text-slate-800 dark:text-slate-100">
-                Panel Operativo: Control de Pedidos & Ramos
+              <p className="text-xs sm:text-sm font-black text-amber-950 dark:text-amber-100 font-brand">
+                Loany Detalles — Panel de Pedidos & Ramos
               </p>
-              <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
-                Haz clic en cualquier pedido para ver su ficha completa. Cambia de estado directamente desde el semáforo.
+              <p className="text-[11px] sm:text-xs text-amber-800/80 dark:text-slate-400">
+                Control de confección, despachos y saldos para Puno y Juliaca.
               </p>
             </div>
           </div>
@@ -586,13 +586,16 @@ export default function HomePage() {
       />
 
       {/* Pie de Página */}
-      <footer className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-4 mt-8 transition-colors">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500 dark:text-slate-400">
-          <p>
-            🌸 <strong>Sistema v1.0</strong>
-          </p>
+      <footer className="bg-white dark:bg-slate-900 border-t border-amber-200/60 dark:border-slate-800 py-4 mt-8 transition-colors">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-slate-500 dark:text-slate-400">
+          <div className="flex items-center gap-2">
+            <img src="/logo-loany-circle.png" alt="Loany Detalles" className="w-5 h-5 rounded-full object-cover" />
+            <p>
+              <strong className="text-amber-950 dark:text-amber-200 font-bold font-brand">Loany Detalles</strong> • Flores, Regalos & Momentos
+            </p>
+          </div>
           <p className="text-slate-600 dark:text-slate-400 font-medium">
-            Diseñado y realizado por <span className="text-rose-600 dark:text-rose-400 font-bold">Cristian</span>
+            Diseñado y realizado por <span className="text-amber-600 dark:text-amber-400 font-bold">Cristian</span>
           </p>
         </div>
       </footer>

@@ -140,22 +140,22 @@ export const PedidoModal: React.FC<PedidoModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs overscroll-contain">
       <div className="relative w-full max-w-2xl max-h-[92vh] flex flex-col bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         
-        {/* Cabecera del Modal */}
-        <div className="shrink-0 bg-gradient-to-r from-rose-500 to-rose-600 px-5 sm:px-6 py-4 text-white flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <span className="text-2xl">🌸</span>
+        {/* Cabecera del Modal con branding Loany */}
+        <div className="shrink-0 bg-gradient-to-r from-amber-600 via-amber-700 to-yellow-600 px-5 sm:px-6 py-4 text-white flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img src="/logo-loany-circle.png" alt="Loany" className="w-9 h-9 rounded-full object-cover ring-2 ring-white/50" />
             <div>
-              <h2 className="text-base sm:text-xl font-bold">
+              <h2 className="text-base sm:text-xl font-bold font-brand">
                 {initialData ? `Editar Pedido (${initialData.id})` : 'Registrar Nuevo Pedido'}
               </h2>
-              <p className="text-[11px] sm:text-xs text-rose-100">
-                Detalles del ramo, cliente, pagos y entrega
+              <p className="text-[11px] sm:text-xs text-amber-100">
+                Loany Detalles • Ramo, cliente, pagos y entrega
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-full text-rose-100 hover:text-white hover:bg-rose-700/50 transition-colors"
+            className="p-1.5 rounded-full text-amber-100 hover:text-white hover:bg-white/20 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -474,7 +474,7 @@ export const PedidoModal: React.FC<PedidoModalProps> = ({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-6 py-2.5 bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white rounded-xl shadow-md shadow-rose-200 text-sm font-bold transition-all active:scale-95 disabled:opacity-50"
+              className="px-6 py-2.5 bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white rounded-xl shadow-md shadow-amber-300/50 text-sm font-bold transition-all active:scale-95 disabled:opacity-50 font-brand cursor-pointer"
             >
               {isSubmitting ? 'Guardando...' : initialData ? 'Guardar Cambios' : 'Registrar Pedido'}
             </button>

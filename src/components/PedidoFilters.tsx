@@ -44,7 +44,7 @@ export const PedidoFilters: React.FC<PedidoFiltersProps> = ({
             onClick={() => onChange({ dateMode: 'hoy', customDate: '' })}
             className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
               filters.dateMode === 'hoy'
-                ? 'bg-rose-500 text-white shadow-xs shadow-rose-200 dark:shadow-none'
+                ? 'bg-amber-500 text-white shadow-xs shadow-amber-200 dark:shadow-none'
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
@@ -61,7 +61,7 @@ export const PedidoFilters: React.FC<PedidoFiltersProps> = ({
             onClick={() => onChange({ dateMode: 'manana', customDate: '' })}
             className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
               filters.dateMode === 'manana'
-                ? 'bg-rose-500 text-white shadow-xs shadow-rose-200 dark:shadow-none'
+                ? 'bg-amber-500 text-white shadow-xs shadow-amber-200 dark:shadow-none'
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
@@ -137,7 +137,7 @@ export const PedidoFilters: React.FC<PedidoFiltersProps> = ({
               placeholder="Buscar por cel, ramo, cliente..."
               value={filters.search}
               onChange={(e) => onChange({ search: e.target.value })}
-              className="w-full pl-9 pr-8 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-rose-500/20 focus:border-rose-400 transition-all"
+              className="w-full pl-9 pr-8 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-amber-500/20 focus:border-amber-400 transition-all"
             />
             {filters.search && (
               <button
@@ -158,7 +158,7 @@ export const PedidoFilters: React.FC<PedidoFiltersProps> = ({
               title="Vista de Tabla"
               className={`p-1.5 rounded-lg transition-all ${
                 filters.viewMode === 'table'
-                  ? 'bg-white dark:bg-slate-700 shadow-xs text-rose-600 dark:text-rose-400'
+                  ? 'bg-white dark:bg-slate-700 shadow-xs text-amber-600 dark:text-amber-400'
                   : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
               }`}
             >
@@ -170,7 +170,7 @@ export const PedidoFilters: React.FC<PedidoFiltersProps> = ({
               title="Vista de Tarjetas (Móvil / Tablet)"
               className={`p-1.5 rounded-lg transition-all ${
                 filters.viewMode === 'cards'
-                  ? 'bg-white dark:bg-slate-700 shadow-xs text-rose-600 dark:text-rose-400'
+                  ? 'bg-white dark:bg-slate-700 shadow-xs text-amber-600 dark:text-amber-400'
                   : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
               }`}
             >

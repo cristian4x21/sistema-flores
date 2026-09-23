@@ -1,11 +1,31 @@
 import type { Metadata, Viewport } from 'next';
+import { Caveat, Quicksand, Inter } from 'next/font/google';
 import './globals.css';
 
+const caveat = Caveat({
+  subsets: ['latin'],
+  variable: '--font-caveat',
+  display: 'swap',
+});
+
+const quicksand = Quicksand({
+  subsets: ['latin'],
+  variable: '--font-quicksand',
+  display: 'swap',
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
-  title: 'Sistema v1.0 - Control de Pedidos',
-  description: 'Sistema de control de pedidos, ramos y detalles (Puno y Juliaca)',
+  title: 'Loany Detalles - Control de Pedidos & Ramos',
+  description: 'Loany Detalles • Flores, Regalos y Momentos (Puno & Juliaca)',
   icons: {
-    icon: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌸</text></svg>',
+    icon: '/logo-loany-circle.png',
+    apple: '/logo-loany-circle.png',
   },
 };
 
@@ -14,7 +34,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  themeColor: '#f43f5e',
+  themeColor: '#f59e0b',
 };
 
 export default function RootLayout({
@@ -23,8 +43,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es">
-      <body className="min-h-screen bg-slate-50 text-slate-900 antialiased font-sans">
+    <html lang="es" className={`${caveat.variable} ${quicksand.variable} ${inter.variable}`}>
+      <body className="min-h-screen bg-[#fffdfa] dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased font-sans transition-colors duration-150">
         {children}
       </body>
     </html>

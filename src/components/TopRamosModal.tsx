@@ -82,17 +82,17 @@ export const TopRamosModal: React.FC<TopRamosModalProps> = ({
       <div className="relative w-full max-w-2xl max-h-[90vh] flex flex-col bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         
         {/* Cabecera */}
-        <div className="shrink-0 bg-gradient-to-r from-amber-500 via-rose-500 to-pink-500 px-5 sm:px-6 py-4 text-white flex items-center justify-between">
+        <div className="shrink-0 bg-gradient-to-r from-amber-600 via-amber-700 to-yellow-600 px-5 sm:px-6 py-4 text-white flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shadow-inner shrink-0">
               🏆
             </div>
             <div>
-              <h2 className="text-base sm:text-xl font-black tracking-tight">
+              <h2 className="text-base sm:text-xl font-black tracking-tight font-brand">
                 Ranking de Ramos Más Vendidos
               </h2>
-              <p className="text-[11px] sm:text-xs text-rose-100">
-                Arreglos favoritos de tus clientes y los que más salida tienen
+              <p className="text-[11px] sm:text-xs text-amber-100">
+                Arreglos favoritos de los clientes de Loany Detalles
               </p>
             </div>
           </div>

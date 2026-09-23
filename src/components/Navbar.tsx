@@ -27,27 +27,34 @@ export const Navbar: React.FC<NavbarProps> = ({
   onToggleDarkMode,
 }) => {
   return (
-    <header className="sticky top-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-rose-100 dark:border-slate-800 shadow-xs transition-colors">
+    <header className="sticky top-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-amber-200/80 dark:border-slate-800 shadow-xs transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20 gap-2">
           
-          {/* Logo & Marca Floral con gradiente elegante */}
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-rose-500 via-pink-500 to-fuchsia-600 flex items-center justify-center shadow-md shadow-rose-200 dark:shadow-none text-white text-xl sm:text-2xl font-bold select-none">
-              🌸
+          {/* Logo Oficial de Loany Detalles con su emblema floral */}
+          <div className="flex items-center space-x-2.5 sm:space-x-3.5">
+            <div className="relative w-11 h-11 sm:w-14 sm:h-14 rounded-full ring-2 ring-amber-300 dark:ring-amber-600/70 shadow-md shadow-amber-200/60 dark:shadow-none shrink-0 overflow-hidden bg-amber-50 flex items-center justify-center">
+              <img
+                src="/logo-loany-circle.png"
+                alt="Logo Loany Detalles"
+                className="w-full h-full object-cover select-none"
+              />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-lg sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
-                  Sistema <span className="text-rose-600 dark:text-rose-400">v1.0</span>
-                </h1>
-                <span className="hidden md:inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+              <div className="flex items-baseline gap-1.5 sm:gap-2">
+                <span className="font-script text-2xl sm:text-3xl font-bold text-amber-950 dark:text-amber-100 tracking-wide select-none leading-none">
+                  Loany
+                </span>
+                <span className="font-brand text-[10px] sm:text-xs font-black tracking-widest text-amber-600 dark:text-amber-400 uppercase select-none">
+                  DETALLES
+                </span>
+                <span className="hidden md:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span>
                   Puno • Juliaca
                 </span>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">
-                Control de pedidos diarios, ramos, confección y entregas
+              <p className="text-[10px] sm:text-[11px] font-semibold text-amber-800/70 dark:text-amber-200/60 tracking-wider uppercase hidden sm:block">
+                Flores • Regalos • Momentos
               </p>
             </div>
           </div>
@@ -116,11 +123,11 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="hidden sm:inline">Exportar Excel</span>
             </button>
 
-            {/* Botón Principal: Nuevo Pedido (Sólido Fucsia/Rosa Vibrante) */}
+            {/* Botón Principal: Nuevo Pedido (Miel & Girasol Dorado) */}
             <button
               type="button"
               onClick={onNewOrder}
-              className="px-3.5 py-2 sm:px-4 sm:py-2.5 bg-gradient-to-r from-rose-500 via-pink-600 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white rounded-xl shadow-md shadow-rose-300/60 dark:shadow-none transition-all flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold active:scale-95 cursor-pointer"
+              className="px-3.5 py-2 sm:px-4 sm:py-2.5 bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white rounded-xl shadow-md shadow-amber-300/50 dark:shadow-none transition-all flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold active:scale-95 cursor-pointer font-brand"
             >
               <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
               <span className="hidden sm:inline">Nuevo Pedido</span>

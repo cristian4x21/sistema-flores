@@ -28,19 +28,23 @@ export const PedidosCards: React.FC<PedidosCardsProps> = ({
 
   if (pedidos.length === 0) {
     return (
-      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/90 dark:border-slate-800 p-10 sm:p-14 text-center shadow-xs">
-        <div className="w-16 h-16 rounded-full bg-rose-50 dark:bg-rose-950/40 text-rose-500 mx-auto flex items-center justify-center text-3xl mb-3">
-          🌸
+      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-amber-200/80 dark:border-slate-800 p-10 sm:p-14 text-center shadow-xs">
+        <div className="w-16 h-16 rounded-full ring-2 ring-amber-300 dark:ring-amber-700/60 shadow-md shadow-amber-200/50 dark:shadow-none mx-auto mb-3.5 overflow-hidden bg-amber-50">
+          <img
+            src="/logo-loany-circle.png"
+            alt="Loany Detalles"
+            className="w-full h-full object-cover"
+          />
         </div>
-        <h3 className="text-base sm:text-lg font-bold text-slate-800 dark:text-white">Aún no hay pedidos en esta vista</h3>
+        <h3 className="text-base sm:text-lg font-bold text-amber-950 dark:text-white font-brand">Aún no hay pedidos en esta vista</h3>
         <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1.5 max-w-md mx-auto">
-          El sistema está 100% limpio y listo para empezar a registrar los pedidos reales de tu negocio.
+          El sistema de <strong>Loany Detalles</strong> está 100% limpio y listo para empezar a registrar los pedidos reales de tu negocio.
         </p>
         {onNewOrder && (
           <button
             type="button"
             onClick={onNewOrder}
-            className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white rounded-xl shadow-md shadow-rose-200 dark:shadow-none text-xs sm:text-sm font-bold transition-all active:scale-95 cursor-pointer"
+            className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white rounded-xl shadow-md shadow-amber-300/50 dark:shadow-none text-xs sm:text-sm font-bold transition-all active:scale-95 cursor-pointer font-brand"
           >
             <span>+ Registrar Primer Pedido</span>
           </button>

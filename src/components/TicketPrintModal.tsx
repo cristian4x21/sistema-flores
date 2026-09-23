@@ -29,7 +29,7 @@ export const TicketPrintModal: React.FC<TicketPrintModalProps> = ({
         {/* Encabezado sin impresión */}
         <div className="shrink-0 bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between no-print">
           <div className="flex items-center gap-2">
-            <Printer className="w-4 h-4 text-rose-400" />
+            <Printer className="w-4 h-4 text-amber-400" />
             <span className="font-bold text-sm">Tarjeta de Ramo (Lista para Imprimir)</span>
           </div>
           <button
@@ -49,13 +49,23 @@ export const TicketPrintModal: React.FC<TicketPrintModalProps> = ({
           
           <div className="border-2 border-slate-800 rounded-3xl p-6 relative">
             
-            {/* Cabecera floral estilizada */}
-            <div className="text-center pb-4 border-b border-slate-200">
-              <span className="text-3xl block mb-1">🌸</span>
-              <p className="text-xs uppercase tracking-widest text-slate-500 font-bold">
-                Detalle Especial • Florería
+            {/* Cabecera floral con logo oficial de Loany Detalles */}
+            <div className="text-center pb-4 border-b border-slate-200 flex flex-col items-center">
+              <img
+                src="/logo-loany-circle.png"
+                alt="Loany Detalles"
+                className="w-16 h-16 rounded-full object-cover mb-1.5 border-2 border-amber-300"
+              />
+              <h1 className="font-script text-3xl font-bold text-amber-950 leading-none">
+                Loany
+              </h1>
+              <p className="text-[10px] font-black uppercase tracking-widest text-amber-700 font-brand mt-0.5">
+                — DETALLES —
               </p>
-              <div className="mt-1 flex items-center justify-center gap-2 text-xs font-mono text-slate-400">
+              <p className="text-[9px] uppercase tracking-wider text-slate-400 font-medium">
+                Flores • Regalos • Momentos
+              </p>
+              <div className="mt-1.5 flex items-center justify-center gap-2 text-xs font-mono text-slate-400">
                 <span>{pedido.id}</span>
                 <span>•</span>
                 <span>{pedido.ciudad}</span>
@@ -150,7 +160,7 @@ export const TicketPrintModal: React.FC<TicketPrintModalProps> = ({
           </button>
           <button
             onClick={handlePrint}
-            className="px-6 py-2.5 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm transition-all"
+            className="px-6 py-2.5 bg-amber-600 hover:bg-amber-700 active:scale-95 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm transition-all"
           >
             <Printer className="w-4 h-4" />
             <span>Imprimir Tarjeta para el Ramo</span>
