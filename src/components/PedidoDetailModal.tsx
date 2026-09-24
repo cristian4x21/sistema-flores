@@ -11,11 +11,12 @@ import {
   Heart,
   DollarSign,
   Printer,
-  Edit2,
+  Pencil,
   AlertCircle,
   CheckCircle2,
   Scissors,
   Truck,
+  Store,
   Package,
 } from 'lucide-react';
 
@@ -42,7 +43,7 @@ export const PedidoDetailModal: React.FC<PedidoDetailModalProps> = ({
   const isDelivery = pedido.tipo_entrega === 'Delivery';
 
   const whatsappText = encodeURIComponent(
-    `¡Hola! 🌸 Te saludamos de *Loany Detalles* respecto a tu pedido de *${pedido.producto}*. Queríamos coordinar la entrega programada para hoy a las ${pedido.hora}.`
+    `¡Hola! Te saludamos de *Loany Detalles* respecto a tu pedido de *${pedido.producto}*. Queríamos coordinar la entrega programada para hoy a las ${pedido.hora}.`
   );
 
   return (
@@ -95,7 +96,10 @@ export const PedidoDetailModal: React.FC<PedidoDetailModalProps> = ({
                     : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
                 }`}
               >
-                <span>🔴 Pendiente</span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-rose-500" />
+                  <span>Pendiente</span>
+                </span>
                 <span className="text-[10px] font-normal opacity-80">Por iniciar</span>
               </button>
 
@@ -108,7 +112,10 @@ export const PedidoDetailModal: React.FC<PedidoDetailModalProps> = ({
                     : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
                 }`}
               >
-                <span>🟡 Confección</span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-amber-500" />
+                  <span>Confección</span>
+                </span>
                 <span className="text-[10px] font-normal opacity-80">En taller</span>
               </button>
 
@@ -121,7 +128,10 @@ export const PedidoDetailModal: React.FC<PedidoDetailModalProps> = ({
                     : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
                 }`}
               >
-                <span>🟢 Listo</span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <span>Listo</span>
+                </span>
                 <span className="text-[10px] font-normal opacity-80">Para despacho</span>
               </button>
 
@@ -134,7 +144,10 @@ export const PedidoDetailModal: React.FC<PedidoDetailModalProps> = ({
                     : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
                 }`}
               >
-                <span>✅ Entregado</span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-slate-400" />
+                  <span>Entregado</span>
+                </span>
                 <span className="text-[10px] font-normal opacity-80">Finalizado</span>
               </button>
 
@@ -150,8 +163,9 @@ export const PedidoDetailModal: React.FC<PedidoDetailModalProps> = ({
               {pedido.producto}
             </h3>
             {pedido.notas && (
-              <p className="mt-2 text-xs text-amber-800 dark:text-amber-300 bg-amber-100/60 dark:bg-amber-950/40 p-2 rounded-xl border border-amber-200/60">
-                ⚠️ <strong>Nota de taller:</strong> {pedido.notas}
+              <p className="mt-2 text-xs text-amber-800 dark:text-amber-300 bg-amber-100/60 dark:bg-amber-950/40 p-2 rounded-xl border border-amber-200/60 flex items-center gap-1.5">
+                <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                <span><strong>Nota de taller:</strong> {pedido.notas}</span>
               </p>
             )}
           </div>
@@ -211,13 +225,23 @@ export const PedidoDetailModal: React.FC<PedidoDetailModalProps> = ({
                   {pedido.ciudad}
                 </span>
                 <span
-                  className={`px-2 py-0.5 rounded text-xs font-semibold ${
+                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold ${
                     isDelivery
                       ? 'bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300'
                       : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
                   }`}
                 >
-                  {isDelivery ? '🛵 Delivery' : '🛍️ Recojo en Tienda'}
+                  {isDelivery ? (
+                    <>
+                      <Truck className="w-3.5 h-3.5 text-sky-600" />
+                      <span>Delivery</span>
+                    </>
+                  ) : (
+                    <>
+                      <Store className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>Recojo en Tienda</span>
+                    </>
+                  )}
                 </span>
               </div>
               {isDelivery && pedido.direccion && (
@@ -297,7 +321,7 @@ export const PedidoDetailModal: React.FC<PedidoDetailModalProps> = ({
               }}
               className="px-4 py-2 text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/50 hover:bg-blue-100 rounded-xl transition-all flex items-center gap-1.5"
             >
-              <Edit2 className="w-3.5 h-3.5" />
+              <Pencil className="w-3.5 h-3.5" />
               <span>Editar Pedido</span>
             </button>
             <button

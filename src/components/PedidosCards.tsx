@@ -3,7 +3,20 @@
 import React from 'react';
 import { Pedido, getEstadoPedido, EstadoPedido, isPedidoUrgente } from '@/types/pedido';
 import { getTodayDateString } from '@/lib/mockData';
-import { MessageCircle, Clock, MapPin, Printer, Edit2, Trash2, AlertCircle, CheckCircle2 } from 'lucide-react';
+import {
+  MessageCircle,
+  Clock,
+  MapPin,
+  Printer,
+  Pencil,
+  Trash2,
+  AlertCircle,
+  CheckCircle2,
+  User,
+  Heart,
+  Truck,
+  Store,
+} from 'lucide-react';
 
 interface PedidosCardsProps {
   pedidos: Pedido[];
@@ -74,29 +87,33 @@ export const PedidosCards: React.FC<PedidosCardsProps> = ({
         const esUrgente = isPedidoUrgente(pedido, todayStr);
 
         const whatsappText = encodeURIComponent(
-          `¡Hola! 🌸 Te saludamos de la Florería respecto a tu pedido de *${pedido.producto}*. Queríamos coordinar la entrega programada para hoy a las ${pedido.hora}.`
+          `¡Hola! Te saludamos de *Loany Detalles* respecto a tu pedido de *${pedido.producto}*. Queríamos coordinar la entrega programada para hoy a las ${pedido.hora}.`
         );
 
         const statusConfig = {
           pendiente: {
-            label: '🔴 Pendiente',
+            label: 'Pendiente',
             desc: 'Por iniciar',
             style: 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-900',
+            dot: 'bg-rose-500',
           },
           confeccion: {
-            label: '🟡 En Confección',
+            label: 'En Confección',
             desc: 'En taller',
             style: 'bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-900',
+            dot: 'bg-amber-500',
           },
           listo: {
-            label: '🟢 Listo p/ Entrega',
+            label: 'Listo Entrega',
             desc: 'Esperando despacho',
             style: 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-900',
+            dot: 'bg-emerald-500',
           },
           entregado: {
-            label: '✅ Entregado',
+            label: 'Entregado',
             desc: 'Finalizado',
             style: 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700',
+            dot: 'bg-slate-400',
           },
         }[estado];
 
@@ -107,7 +124,7 @@ export const PedidosCards: React.FC<PedidosCardsProps> = ({
             className={`rounded-3xl border transition-all p-4.5 shadow-sm hover:shadow-md cursor-pointer flex flex-col justify-between ${
               esUrgente
                 ? 'bg-rose-50/90 dark:bg-rose-950/20 border-rose-300 dark:border-rose-800 ring-2 ring-rose-400/40'
-                : 'bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-800 hover:border-rose-200'
+                : 'bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-800 hover:border-amber-200'
             }`}
           >
             <div>
@@ -121,8 +138,9 @@ export const PedidosCards: React.FC<PedidosCardsProps> = ({
                     {pedido.producto}
                   </h3>
                   {pedido.cliente && (
-                    <p className="text-xs text-slate-600 dark:text-slate-300 font-medium truncate mt-0.5">
-                      👤 {pedido.cliente}
+                    <p className="text-xs text-slate-600 dark:text-slate-300 font-medium truncate mt-0.5 flex items-center gap-1">
+                      <User className="w-3 h-3 text-slate-400 shrink-0" />
+                      <span className="truncate">{pedido.cliente}</span>
                     </p>
                   )}
                 </div>
@@ -140,8 +158,9 @@ export const PedidosCards: React.FC<PedidosCardsProps> = ({
 
               {/* Dedicatoria */}
               {pedido.dedicatoria && (
-                <div className="text-xs bg-rose-50/70 dark:bg-rose-950/30 border border-rose-100 dark:border-rose-900/40 rounded-xl p-2.5 text-rose-800 dark:text-rose-300 italic mb-3 line-clamp-2">
-                  💌 &ldquo;{pedido.dedicatoria}&rdquo;
+                <div className="text-xs bg-rose-50/70 dark:bg-rose-950/30 border border-rose-100 dark:border-rose-900/40 rounded-xl p-2.5 text-rose-800 dark:text-rose-300 italic mb-3 line-clamp-2 flex items-start gap-1">
+                  <Heart className="w-3 h-3 fill-rose-500 text-rose-500 shrink-0 mt-0.5" />
+                  <span className="truncate">&ldquo;{pedido.dedicatoria}&rdquo;</span>
                 </div>
               )}
 
@@ -154,13 +173,23 @@ export const PedidosCards: React.FC<PedidosCardsProps> = ({
                 </div>
                 <div className="text-right">
                   <span
-                    className={`inline-block px-2 py-0.5 rounded text-[11px] font-bold ${
+                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold ${
                       isDelivery
                         ? 'bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300'
                         : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
                     }`}
                   >
-                    {isDelivery ? `🛵 Deliv S/${Number(pedido.costo_delivery).toFixed(0)}` : '🛍️ Recojo'}
+                    {isDelivery ? (
+                      <>
+                        <Truck className="w-3 h-3 text-sky-600" />
+                        <span>Delivery S/ {Number(pedido.costo_delivery).toFixed(0)}</span>
+                      </>
+                    ) : (
+                      <>
+                        <Store className="w-3 h-3 text-emerald-600" />
+                        <span>Recojo</span>
+                      </>
+                    )}
                   </span>
                 </div>
                 {isDelivery && pedido.direccion && (
@@ -205,7 +234,10 @@ export const PedidosCards: React.FC<PedidosCardsProps> = ({
                 onClick={(e) => cycleStatus(e, pedido.id, estado)}
                 className={`w-full py-2 px-3 rounded-2xl text-xs font-bold border transition-all flex items-center justify-between shadow-2xs active:scale-95 ${statusConfig.style}`}
               >
-                <span>{statusConfig.label}</span>
+                <span className="inline-flex items-center gap-1.5">
+                  <span className={`w-2 h-2 rounded-full ${statusConfig.dot} shrink-0`} />
+                  <span>{statusConfig.label}</span>
+                </span>
                 <span className="text-[11px] opacity-75 font-semibold">Tocar para cambiar ▾</span>
               </button>
 
@@ -225,7 +257,7 @@ export const PedidosCards: React.FC<PedidosCardsProps> = ({
                   type="button"
                   onClick={() => onPrint(pedido)}
                   title="Imprimir comanda"
-                  className="p-1.5 text-slate-500 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
+                  className="p-1.5 text-slate-500 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer"
                 >
                   <Printer className="w-4 h-4" />
                 </button>
@@ -234,16 +266,16 @@ export const PedidosCards: React.FC<PedidosCardsProps> = ({
                   type="button"
                   onClick={() => onEdit(pedido)}
                   title="Editar pedido"
-                  className="p-1.5 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 rounded-lg"
+                  className="p-1.5 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 rounded-lg cursor-pointer"
                 >
-                  <Edit2 className="w-4 h-4" />
+                  <Pencil className="w-4 h-4" />
                 </button>
 
                 <button
                   type="button"
                   onClick={() => onDelete(pedido)}
                   title="Eliminar pedido"
-                  className="p-1.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg"
+                  className="p-1.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg cursor-pointer"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>

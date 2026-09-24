@@ -133,7 +133,7 @@ export const StatsBar: React.FC<StatsBarProps> = ({
         </div>
         <div className="mt-1">
           <span className="text-[11px] font-semibold text-rose-500/90 dark:text-rose-400/80">
-            {porArmar === 0 ? '✨ Todo listo' : 'Tocar para filtrar'}
+            {porArmar === 0 ? 'Todo listo' : 'Tocar para filtrar'}
           </span>
         </div>
       </div>
@@ -237,7 +237,7 @@ export const StatsBar: React.FC<StatsBarProps> = ({
         </p>
         <div className="mt-1 flex items-center justify-between">
           <span className="text-[11px] font-bold text-amber-700 dark:text-amber-400">
-            {totalSaldos > 0 ? '👉 Tocar para verlos' : '✓ Todos al día'}
+            {totalSaldos > 0 ? 'Tocar para verlos' : 'Todos al día'}
           </span>
           {renderTrend(varSaldos, ' S/', true)}
         </div>

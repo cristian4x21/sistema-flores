@@ -46,8 +46,9 @@ export const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
             </span>
           </p>
 
-          <div className="mt-3 p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200/80 dark:border-rose-900/50 text-xs text-rose-700 dark:text-rose-300 font-medium">
-            ⚠️ Esta acción no se puede deshacer.
+          <div className="mt-3 p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200/80 dark:border-rose-900/50 text-xs text-rose-700 dark:text-rose-300 font-medium flex items-center justify-center gap-1.5">
+            <AlertTriangle className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+            <span>Esta acción no se puede deshacer.</span>
           </div>
         </div>
 

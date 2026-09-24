@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { Pedido } from '@/types/pedido';
-import { Trophy, X, TrendingUp, Sparkles, Package, DollarSign, Search } from 'lucide-react';
+import { Trophy, Award, X, TrendingUp, Sparkles, Package, DollarSign, Search } from 'lucide-react';
 
 interface TopRamosModalProps {
   isOpen: boolean;
@@ -84,8 +84,8 @@ export const TopRamosModal: React.FC<TopRamosModalProps> = ({
         {/* Cabecera */}
         <div className="shrink-0 bg-gradient-to-r from-amber-600 via-amber-700 to-yellow-600 px-5 sm:px-6 py-4 text-white flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shadow-inner shrink-0">
-              🏆
+            <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner shrink-0">
+              <Trophy className="w-5 h-5 text-amber-200" />
             </div>
             <div>
               <h2 className="text-base sm:text-xl font-black tracking-tight font-brand">
@@ -98,7 +98,7 @@ export const TopRamosModal: React.FC<TopRamosModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-full text-white/80 hover:text-white hover:bg-white/20 transition-colors"
+            className="p-1.5 rounded-full text-white/80 hover:text-white hover:bg-white/20 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -114,7 +114,9 @@ export const TopRamosModal: React.FC<TopRamosModalProps> = ({
           {ramoEstrella && (
             <div className="bg-gradient-to-r from-amber-50 via-rose-50 to-pink-50 dark:from-amber-950/30 dark:via-rose-950/20 dark:to-slate-800/80 border border-amber-200/80 dark:border-amber-800/50 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
               <div className="flex items-center gap-3">
-                <span className="text-3xl shrink-0">🥇</span>
+                <div className="w-10 h-10 rounded-2xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-amber-300/60 dark:shadow-none">
+                  <Award className="w-6 h-6" />
+                </div>
                 <div>
                   <span className="inline-block text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500 text-white mb-0.5">
                     Ramo Estrella (#1 en Ventas)
@@ -161,18 +163,22 @@ export const TopRamosModal: React.FC<TopRamosModalProps> = ({
               </p>
             ) : (
               filtrados.map((item, idx) => {
-                const medallas = ['🥇', '🥈', '🥉'];
-                const medalla = idx < 3 ? medallas[idx] : null;
+                const badgeStyles = [
+                  'bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800 font-black',
+                  'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-600 font-black',
+                  'bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-400 border-amber-200 dark:border-amber-900 font-bold',
+                ];
+                const badgeStyle = idx < 3 ? badgeStyles[idx] : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700';
 
                 return (
                   <div
                     key={item.nombre}
-                    className="p-3.5 rounded-2xl bg-white dark:bg-slate-850 border border-slate-200/90 dark:border-slate-800 hover:border-rose-200 dark:hover:border-rose-800 hover:shadow-xs transition-all space-y-2"
+                    className="p-3.5 rounded-2xl bg-white dark:bg-slate-850 border border-slate-200/90 dark:border-slate-800 hover:border-amber-300 dark:hover:border-amber-800 hover:shadow-xs transition-all space-y-2"
                   >
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <span className="w-7 h-7 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center font-bold text-xs text-slate-700 dark:text-slate-300 shrink-0 font-mono">
-                          {medalla || `#${idx + 1}`}
+                        <span className={`w-8 h-8 rounded-xl border flex items-center justify-center text-xs shrink-0 font-mono ${badgeStyle}`}>
+                          #{idx + 1}
                         </span>
                         <div className="truncate">
                           <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100 capitalize truncate">

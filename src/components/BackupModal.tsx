@@ -283,20 +283,29 @@ export const BackupModal: React.FC<BackupModalProps> = ({
           {/* Guía Recomendada de Rutina */}
           <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
             <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-              💡 Rutina Recomendada para tu Florería:
+              Rutina Recomendada para Loany Detalles:
             </h3>
 
             <div className="space-y-2 text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed bg-amber-50/70 dark:bg-amber-950/20 p-3.5 rounded-2xl border border-amber-200/70 dark:border-amber-900/50">
               <div className="flex items-start gap-2">
-                <span className="font-bold text-amber-700 dark:text-amber-400 shrink-0">📅 Semanal:</span>
-                <span>Descarga una copia en Excel todos los domingos y guárdala en una carpeta de tu celular o PC llamada <em>"Respaldos Florería"</em>.</span>
+                <span className="font-bold text-amber-700 dark:text-amber-400 shrink-0 flex items-center gap-1">
+                  <Calendar className="w-3.5 h-3.5 text-amber-600" />
+                  <span>Semanal:</span>
+                </span>
+                <span>Descarga una copia en Excel todos los domingos y guárdala en una carpeta de tu celular o PC llamada <em>"Respaldos Loany"</em>.</span>
               </div>
               <div className="flex items-start gap-2">
-                <span className="font-bold text-amber-700 dark:text-amber-400 shrink-0">☁️ Google Drive:</span>
+                <span className="font-bold text-amber-700 dark:text-amber-400 shrink-0 flex items-center gap-1">
+                  <Cloud className="w-3.5 h-3.5 text-amber-600" />
+                  <span>Google Drive:</span>
+                </span>
                 <span>Sube el archivo Excel a tu Google Drive para tener un respaldo adicional por si extravías tu teléfono.</span>
               </div>
               <div className="flex items-start gap-2">
-                <span className="font-bold text-amber-700 dark:text-amber-400 shrink-0">🛡️ Servidor Cloud:</span>
+                <span className="font-bold text-amber-700 dark:text-amber-400 shrink-0 flex items-center gap-1">
+                  <Database className="w-3.5 h-3.5 text-amber-600" />
+                  <span>Servidor Cloud:</span>
+                </span>
                 <span>Tus datos ya están guardados de forma segura en los servidores en la nube de Supabase con replicación continua.</span>
               </div>
             </div>
@@ -307,7 +316,7 @@ export const BackupModal: React.FC<BackupModalProps> = ({
         {/* Pie del Modal */}
         <div className="shrink-0 p-4 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
           <span>
-            Florería <strong>Sistema v1.0</strong> • Puno & Juliaca
+            <strong className="text-amber-950 dark:text-amber-200 font-brand">Loany Detalles</strong> • Puno & Juliaca
           </span>
           <button
             onClick={onClose}

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Pedido } from '@/types/pedido';
-import { Printer, X, Heart, Clock, MapPin, AlertCircle } from 'lucide-react';
+import { Printer, X, Heart, Clock, MapPin, AlertCircle, Truck, Store } from 'lucide-react';
 
 interface TicketPrintModalProps {
   pedido: Pedido | null;
@@ -123,8 +123,18 @@ export const TicketPrintModal: React.FC<TicketPrintModalProps> = ({
               </div>
 
               <div>
-                <span className="px-2.5 py-1 rounded-lg bg-slate-100 font-bold text-slate-800">
-                  {pedido.tipo_entrega === 'Delivery' ? '🛵 DELIVERY' : '🛍️ RECOJO'}
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 font-bold text-slate-800">
+                  {pedido.tipo_entrega === 'Delivery' ? (
+                    <>
+                      <Truck className="w-3.5 h-3.5 text-slate-700" />
+                      <span>DELIVERY</span>
+                    </>
+                  ) : (
+                    <>
+                      <Store className="w-3.5 h-3.5 text-slate-700" />
+                      <span>RECOJO</span>
+                    </>
+                  )}
                 </span>
               </div>
             </div>
@@ -139,9 +149,10 @@ export const TicketPrintModal: React.FC<TicketPrintModalProps> = ({
 
             {/* Alerta de Saldo para el repartidor/tienda */}
             {hasSaldo && (
-              <div className="mt-3 p-2 bg-rose-50 border border-rose-200 rounded-xl text-center">
+              <div className="mt-3 p-2 bg-rose-50 border border-rose-200 rounded-xl text-center flex items-center justify-center gap-1.5">
+                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
                 <p className="text-xs font-extrabold text-rose-700">
-                  ⚠️ COBRAR SALDO: S/ {Number(pedido.saldo).toFixed(2)}
+                  COBRAR SALDO: S/ {Number(pedido.saldo).toFixed(2)}
                 </p>
               </div>
             )}

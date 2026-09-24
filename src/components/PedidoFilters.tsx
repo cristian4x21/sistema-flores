@@ -195,9 +195,9 @@ export const PedidoFilters: React.FC<PedidoFiltersProps> = ({
             className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1 text-slate-700 dark:text-slate-200 font-semibold focus:outline-hidden focus:border-rose-400 cursor-pointer"
           >
             <option value="todos">Todos los estados</option>
-            <option value="por_armar">🔴 Por Confeccionar (Pendientes)</option>
-            <option value="por_entregar">🚚 Por Entregar (Despacho)</option>
-            <option value="completados">✅ Completados (Finalizados)</option>
+            <option value="por_armar">Por Confeccionar (Pendientes)</option>
+            <option value="por_entregar">Por Entregar (Despacho)</option>
+            <option value="completados">Completados (Finalizados)</option>
           </select>
         </div>
 
@@ -209,11 +209,11 @@ export const PedidoFilters: React.FC<PedidoFiltersProps> = ({
           <select
             value={filters.ciudad}
             onChange={(e) => onChange({ ciudad: e.target.value as any })}
-            className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1 text-slate-700 dark:text-slate-200 font-semibold focus:outline-hidden focus:border-rose-400 cursor-pointer"
+            className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1 text-slate-700 dark:text-slate-200 font-semibold focus:outline-hidden focus:border-amber-400 cursor-pointer"
           >
             <option value="todas">Todas las ciudades</option>
-            <option value="Puno">🟢 Puno</option>
-            <option value="Juliaca">🟣 Juliaca</option>
+            <option value="Puno">Puno</option>
+            <option value="Juliaca">Juliaca</option>
           </select>
         </div>
 
@@ -225,11 +225,11 @@ export const PedidoFilters: React.FC<PedidoFiltersProps> = ({
           <select
             value={filters.tipoEntrega}
             onChange={(e) => onChange({ tipoEntrega: e.target.value as any })}
-            className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1 text-slate-700 dark:text-slate-200 font-semibold focus:outline-hidden focus:border-rose-400 cursor-pointer"
+            className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1 text-slate-700 dark:text-slate-200 font-semibold focus:outline-hidden focus:border-amber-400 cursor-pointer"
           >
             <option value="todos">Delivery & Recojo</option>
-            <option value="Delivery">🛵 Solo Delivery</option>
-            <option value="Recojo">🛍️ Solo Recojo en Tienda</option>
+            <option value="Delivery">Solo Delivery</option>
+            <option value="Recojo">Solo Recojo en Tienda</option>
           </select>
         </div>
 

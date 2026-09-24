@@ -3,7 +3,21 @@
 import React from 'react';
 import { Pedido, getEstadoPedido, EstadoPedido, isPedidoUrgente } from '@/types/pedido';
 import { getTodayDateString } from '@/lib/mockData';
-import { MessageCircle, Printer, Edit2, Trash2, Clock, AlertCircle, CheckCircle2, ChevronRight } from 'lucide-react';
+import {
+  MessageCircle,
+  Printer,
+  Pencil,
+  Trash2,
+  Clock,
+  AlertCircle,
+  CheckCircle2,
+  ChevronRight,
+  ArrowLeftRight,
+  User,
+  Heart,
+  Truck,
+  Store,
+} from 'lucide-react';
 
 interface PedidosTableProps {
   pedidos: Pedido[];
@@ -70,7 +84,8 @@ export const PedidosTable: React.FC<PedidosTableProps> = ({
       {/* Indicador táctil para teléfonos móviles */}
       <div className="md:hidden px-4 py-2 bg-slate-100/90 dark:bg-slate-800/90 border-b border-slate-200 dark:border-slate-700/80 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 font-medium">
         <span className="flex items-center gap-1.5">
-          <span>👈👉</span> Desliza la tabla para ver todos los datos
+          <ArrowLeftRight className="w-3.5 h-3.5 text-slate-400" />
+          <span>Desliza la tabla para ver todos los datos</span>
         </span>
         <span className="text-[10px] font-bold bg-slate-200 dark:bg-slate-700 px-2 py-0.5 rounded-full">
           {pedidos.length} {pedidos.length === 1 ? 'pedido' : 'pedidos'}
@@ -99,30 +114,34 @@ export const PedidosTable: React.FC<PedidosTableProps> = ({
               const esUrgente = isPedidoUrgente(pedido, todayStr);
 
               const whatsappText = encodeURIComponent(
-                `¡Hola! 🌸 Te saludamos de la Florería respecto a tu pedido de *${pedido.producto}*. Queríamos coordinar la entrega programada para hoy a las ${pedido.hora}.`
+                `¡Hola! Te saludamos de *Loany Detalles* respecto a tu pedido de *${pedido.producto}*. Queríamos coordinar la entrega programada para hoy a las ${pedido.hora}.`
               );
 
-              // Estilos de semáforo único
+              // Estilos de semáforo único con indicador circular consistente
               const statusConfig = {
                 pendiente: {
-                  label: '🔴 Pendiente',
+                  label: 'Pendiente',
                   desc: 'Por iniciar',
                   style: 'bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-900',
+                  dot: 'bg-rose-500',
                 },
                 confeccion: {
-                  label: '🟡 En Confección',
+                  label: 'En Confección',
                   desc: 'En taller',
                   style: 'bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-900',
+                  dot: 'bg-amber-500',
                 },
                 listo: {
-                  label: '🟢 Listo p/ Entrega',
+                  label: 'Listo Entrega',
                   desc: 'Esperando despacho',
                   style: 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-900',
+                  dot: 'bg-emerald-500',
                 },
                 entregado: {
-                  label: '✅ Entregado',
+                  label: 'Entregado',
                   desc: 'Finalizado',
                   style: 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700',
+                  dot: 'bg-slate-400',
                 },
               }[estado];
 
@@ -147,12 +166,16 @@ export const PedidosTable: React.FC<PedidosTableProps> = ({
                       title="Haz clic para cambiar al siguiente estado del semáforo"
                       className={`inline-flex items-center justify-between w-full max-w-[130px] py-1 px-2.5 rounded-xl text-xs font-bold border shadow-2xs active:scale-95 transition-all ${statusConfig.style}`}
                     >
-                      <span>{statusConfig.label}</span>
+                      <span className="inline-flex items-center gap-1.5">
+                        <span className={`w-2 h-2 rounded-full ${statusConfig.dot} shrink-0`} />
+                        <span>{statusConfig.label}</span>
+                      </span>
                       <span className="text-[10px] opacity-60">▾</span>
                     </button>
                     {esUrgente && (
-                      <span className="block text-[10px] text-rose-600 dark:text-rose-400 font-extrabold mt-0.5 animate-pulse">
-                        ⚠️ ¡Hora próxima!
+                      <span className="inline-flex items-center gap-1 text-[10px] text-rose-600 dark:text-rose-400 font-extrabold mt-0.5 animate-pulse">
+                        <AlertCircle className="w-3 h-3 text-rose-500 shrink-0" />
+                        <span>¡Hora próxima!</span>
                       </span>
                     )}
                   </td>
@@ -173,8 +196,9 @@ export const PedidosTable: React.FC<PedidosTableProps> = ({
                       </a>
                     </div>
                     {pedido.cliente ? (
-                      <p className="text-[11px] text-slate-600 dark:text-slate-300 font-medium truncate max-w-[130px] mt-0.5">
-                        👤 {pedido.cliente}
+                      <p className="text-[11px] text-slate-600 dark:text-slate-300 font-medium truncate max-w-[130px] mt-0.5 flex items-center gap-1">
+                        <User className="w-3 h-3 text-slate-400 shrink-0" />
+                        <span className="truncate">{pedido.cliente}</span>
                       </p>
                     ) : (
                       <span className="text-[10px] text-slate-400 font-mono">{pedido.id}</span>
@@ -187,13 +211,15 @@ export const PedidosTable: React.FC<PedidosTableProps> = ({
                       {pedido.producto}
                     </div>
                     {pedido.dedicatoria && (
-                      <p className="text-[11px] text-rose-700 dark:text-rose-300 italic bg-rose-50/70 dark:bg-rose-950/40 px-2 py-0.5 rounded-md mt-0.5 line-clamp-1 border border-rose-100 dark:border-rose-900/40">
-                        💌 &ldquo;{pedido.dedicatoria}&rdquo;
+                      <p className="text-[11px] text-rose-700 dark:text-rose-300 italic bg-rose-50/70 dark:bg-rose-950/40 px-2 py-0.5 rounded-md mt-0.5 line-clamp-1 border border-rose-100 dark:border-rose-900/40 flex items-center gap-1">
+                        <Heart className="w-3 h-3 fill-rose-500 text-rose-500 shrink-0" />
+                        <span className="truncate">&ldquo;{pedido.dedicatoria}&rdquo;</span>
                       </p>
                     )}
                     {pedido.notas && (
-                      <span className="text-[10px] text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 px-1.5 py-0.2 rounded mt-0.5 inline-block line-clamp-1">
-                        ⚠️ {pedido.notas}
+                      <span className="text-[10px] text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 px-1.5 py-0.2 rounded mt-0.5 inline-flex items-center gap-1 line-clamp-1">
+                        <AlertCircle className="w-3 h-3 text-amber-500 shrink-0" />
+                        <span className="truncate">{pedido.notas}</span>
                       </span>
                     )}
                   </td>
@@ -240,13 +266,23 @@ export const PedidosTable: React.FC<PedidosTableProps> = ({
                     </div>
                     <div className="mt-0.5">
                       <span
-                        className={`inline-block px-2 py-0.2 rounded-md text-[10px] font-bold ${
+                        className={`inline-flex items-center gap-1 px-2 py-0.2 rounded-md text-[10px] font-bold ${
                           isDelivery
                             ? 'bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300'
                             : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
                         }`}
                       >
-                        {isDelivery ? `🛵 Delivery S/ ${Number(pedido.costo_delivery).toFixed(0)}` : '🛍️ Recojo'}
+                        {isDelivery ? (
+                          <>
+                            <Truck className="w-3 h-3 text-sky-600" />
+                            <span>Delivery S/ {Number(pedido.costo_delivery).toFixed(0)}</span>
+                          </>
+                        ) : (
+                          <>
+                            <Store className="w-3 h-3 text-emerald-600" />
+                            <span>Recojo</span>
+                          </>
+                        )}
                       </span>
                     </div>
                   </td>
@@ -258,7 +294,7 @@ export const PedidosTable: React.FC<PedidosTableProps> = ({
                         type="button"
                         onClick={() => onPrint(pedido)}
                         title="Imprimir tarjeta de ramo"
-                        className="p-1.5 text-slate-500 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                        className="p-1.5 text-slate-500 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
                       >
                         <Printer className="w-3.5 h-3.5" />
                       </button>
@@ -267,16 +303,16 @@ export const PedidosTable: React.FC<PedidosTableProps> = ({
                         type="button"
                         onClick={() => onEdit(pedido)}
                         title="Editar pedido"
-                        className="p-1.5 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 rounded-lg transition-colors"
+                        className="p-1.5 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 rounded-lg transition-colors cursor-pointer"
                       >
-                        <Edit2 className="w-3.5 h-3.5" />
+                        <Pencil className="w-3.5 h-3.5" />
                       </button>
 
                       <button
                         type="button"
                         onClick={() => onDelete(pedido)}
                         title="Eliminar pedido"
-                        className="p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors"
+                        className="p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors cursor-pointer"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>

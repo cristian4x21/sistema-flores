@@ -243,8 +243,8 @@ export const PedidoModal: React.FC<PedidoModalProps> = ({
                 onChange={(e) => setFormData({ ...formData, ciudad: e.target.value })}
                 className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-hidden focus:border-rose-400"
               >
-                <option value="Puno">🟢 Puno</option>
-                <option value="Juliaca">🟣 Juliaca</option>
+                <option value="Puno">Puno</option>
+                <option value="Juliaca">Juliaca</option>
               </select>
             </div>
 
@@ -265,8 +265,8 @@ export const PedidoModal: React.FC<PedidoModalProps> = ({
                 }}
                 className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-hidden focus:border-rose-400"
               >
-                <option value="Recojo">🛍️ Recojo en Tienda</option>
-                <option value="Delivery">🛵 Envío a Domicilio (Delivery)</option>
+                <option value="Recojo">Recojo en Tienda</option>
+                <option value="Delivery">Envío a Domicilio (Delivery)</option>
               </select>
             </div>
 

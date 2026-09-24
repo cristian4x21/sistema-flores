@@ -4,6 +4,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Pedido, PedidoInput, EstadoPedido, parseHoraToMinutes, getEstadoPedido } from '@/types/pedido';
 import { getTodayDateString } from '@/lib/mockData';
 import { Navbar } from '@/components/Navbar';
+import { Sidebar } from '@/components/Sidebar';
 import { StatsBar } from '@/components/StatsBar';
 import { PedidoFilters, FilterState } from '@/components/PedidoFilters';
 import { PedidosTable } from '@/components/PedidosTable';
@@ -15,6 +16,7 @@ import { DeleteConfirmModal } from '@/components/DeleteConfirmModal';
 import { PedidoDetailModal } from '@/components/PedidoDetailModal';
 import { BackupModal } from '@/components/BackupModal';
 import { exportPedidosToCSV } from '@/lib/exportExcel';
+import { Trophy, Sparkles, Radio } from 'lucide-react';
 
 const STORAGE_FILTER_KEY = 'floreria_filter_state_v1';
 const STORAGE_THEME_KEY = 'floreria_theme_mode';
@@ -375,60 +377,89 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col font-sans transition-colors duration-200">
       
-      {/* Barra de Navegación Superior */}
-      <Navbar
+      {/* 1. Sidebar Fijo de Navegación Vertical para Pantallas Grandes (Desktop) */}
+      <Sidebar
+        activeTab="pedidos"
+        onNavigatePedidos={() => {
+          handleFilterChange({ statusFilter: 'todos', soloSaldo: false, search: '' });
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        onOpenTopRamos={() => setIsTopRamosOpen(true)}
+        onOpenBackup={() => setIsBackupOpen(true)}
+        onExport={handleExport}
+        onRefresh={fetchPedidos}
         onNewOrder={() => {
           setEditingPedido(null);
           setIsModalOpen(true);
         }}
-        onExport={handleExport}
-        onRefresh={fetchPedidos}
-        onOpenTopRamos={() => setIsTopRamosOpen(true)}
-        onOpenBackup={() => setIsBackupOpen(true)}
         isRefreshing={refreshing}
         totalPedidos={pedidos.length}
         darkMode={darkMode}
         onToggleDarkMode={toggleDarkMode}
       />
 
-      {/* Contenido Principal */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      {/* 2. Contenedor de Contenido Principal (Aprovecha hasta 1920px sin bordes vacíos) */}
+      <div className="md:pl-16 lg:pl-20 flex-1 flex flex-col transition-all duration-200">
         
-        {/* Banner de Información Rápida con Ramo Estrella */}
-        <div className="mb-4 bg-gradient-to-r from-amber-100/70 via-yellow-50/50 to-amber-50/30 dark:from-amber-950/30 dark:via-yellow-950/20 dark:to-slate-900 border border-amber-200/90 dark:border-amber-900/40 rounded-3xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-100 dark:bg-slate-800 text-amber-700 dark:text-amber-300 flex items-center justify-center text-xl shadow-xs border border-amber-200/80 dark:border-slate-700 shrink-0">
-              🌻
-            </div>
-            <div>
-              <p className="text-xs sm:text-sm font-black text-amber-950 dark:text-amber-100 font-brand">
-                Loany Detalles — Panel de Pedidos & Ramos
-              </p>
-              <p className="text-[11px] sm:text-xs text-amber-800/80 dark:text-slate-400">
-                Control de confección, despachos y saldos para Puno y Juliaca.
-              </p>
-            </div>
-          </div>
+        {/* Barra de Navegación Superior */}
+        <Navbar
+          onNewOrder={() => {
+            setEditingPedido(null);
+            setIsModalOpen(true);
+          }}
+          onExport={handleExport}
+          onRefresh={fetchPedidos}
+          onOpenTopRamos={() => setIsTopRamosOpen(true)}
+          onOpenBackup={() => setIsBackupOpen(true)}
+          isRefreshing={refreshing}
+          totalPedidos={pedidos.length}
+          darkMode={darkMode}
+          onToggleDarkMode={toggleDarkMode}
+        />
 
-          <div className="flex flex-wrap items-center gap-2 self-start sm:self-center">
-            {ramoMasPedido && (
-              <button
-                type="button"
-                onClick={() => setIsTopRamosOpen(true)}
-                title="Tocar para ver el ranking de ventas"
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-950/70 hover:bg-amber-200 dark:hover:bg-amber-900 text-amber-950 dark:text-amber-200 border border-amber-300 dark:border-amber-800 transition-all shadow-2xs active:scale-95 cursor-pointer"
-              >
-                <span>🏆 Ramo que más sale:</span>
-                <span className="text-rose-600 dark:text-rose-400 underline capitalize">{ramoMasPedido.name}</span>
-                <span className="text-amber-800 dark:text-amber-300 font-black">({ramoMasPedido.count})</span>
-              </button>
-            )}
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 shadow-2xs">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              En Vivo
-            </span>
+        {/* Contenido Principal con Ancho Amplio Aprovechado */}
+        <main className="flex-1 w-full max-w-[1920px] mx-auto px-3 sm:px-6 lg:px-8 xl:px-10 py-5">
+          
+          {/* Banner de Información Rápida con Ramo Estrella */}
+          <div className="mb-4 bg-gradient-to-r from-amber-100/70 via-yellow-50/50 to-amber-50/30 dark:from-amber-950/30 dark:via-yellow-950/20 dark:to-slate-900 border border-amber-200/90 dark:border-amber-900/40 rounded-3xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-amber-100 dark:bg-slate-800 text-amber-700 dark:text-amber-300 flex items-center justify-center shadow-xs border border-amber-200/80 dark:border-slate-700 shrink-0 overflow-hidden">
+                <img
+                  src="/logo-loany-circle.png"
+                  alt="Loany Detalles"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div>
+                <p className="text-xs sm:text-sm font-black text-amber-950 dark:text-amber-100 font-brand">
+                  Loany Detalles — Panel de Pedidos & Ramos
+                </p>
+                <p className="text-[11px] sm:text-xs text-amber-800/80 dark:text-slate-400">
+                  Control de confección, despachos y saldos para Puno y Juliaca.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2 self-start sm:self-center">
+              {ramoMasPedido && (
+                <button
+                  type="button"
+                  onClick={() => setIsTopRamosOpen(true)}
+                  title="Tocar para ver el ranking de ventas"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-950/70 hover:bg-amber-200 dark:hover:bg-amber-900 text-amber-950 dark:text-amber-200 border border-amber-300 dark:border-amber-800 transition-all shadow-2xs active:scale-95 cursor-pointer"
+                >
+                  <Trophy className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                  <span>Ramo que más sale:</span>
+                  <span className="text-rose-600 dark:text-rose-400 underline capitalize">{ramoMasPedido.name}</span>
+                  <span className="text-amber-800 dark:text-amber-300 font-black">({ramoMasPedido.count})</span>
+                </button>
+              )}
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 shadow-2xs">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>En Vivo</span>
+              </span>
+            </div>
           </div>
-        </div>
 
         {/* Tarjetas de Estadísticas Clicables */}
         <StatsBar
@@ -587,7 +618,7 @@ export default function HomePage() {
 
       {/* Pie de Página */}
       <footer className="bg-white dark:bg-slate-900 border-t border-amber-200/60 dark:border-slate-800 py-4 mt-8 transition-colors">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-slate-500 dark:text-slate-400">
+        <div className="max-w-[1920px] w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-slate-500 dark:text-slate-400">
           <div className="flex items-center gap-2">
             <img src="/logo-loany-circle.png" alt="Loany Detalles" className="w-5 h-5 rounded-full object-cover" />
             <p>
@@ -599,6 +630,8 @@ export default function HomePage() {
           </p>
         </div>
       </footer>
+
+      </div>
     </div>
   );
 }
